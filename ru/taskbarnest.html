@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Папки приложений на панели задач Windows 11.">
+<link rel="canonical" href="https://codechaoslab.com/ru/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Страницы"><a href="index.html">Программы</a><a href="contact.html?type=demande">Отправить пожелание</a><a href="contact.html?type=signalement">Сообщить о проблеме</a><a href="apropos.html">О сайте</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Творчество</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Открыть или закрыть папку-пример"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Раскладывайте приложения по папкам прямо на панели задач Windows 11.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Скоро появится</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Бесплатно. Windows 11, 64 бита. Без учётной записи и прав администратора.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Как пользоваться TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Установить</h3>
+      <p>Откройте скачанный файл, выберите тему и нажмите <b>Установить</b>.</p>
+      <p>У TaskbarNest нет платной подписи, поэтому Windows может показать «Система Windows защитила ваш компьютер»: нажмите <b>Подробнее</b>, затем <b>Выполнить в любом случае</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="Окно установки TaskbarNest: два флажка (меню «Пуск» и ярлык на рабочем столе) и выбор темы." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="Окно установки TaskbarNest: два флажка (меню «Пуск» и ярлык на рабочем столе) и выбор темы." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Добавить приложения</h3>
+      <ul>
+        <li>Перетащите значок с панели задач над папкой и отпустите его в области <b>Отпустите здесь</b>.</li>
+        <li>Ярлык с рабочего стола можно отпустить прямо на папку.</li>
+        <li>Отпустите одно приложение над другим, чтобы создать папку с обоими.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="Приложение перетаскивают в область «Отпустите здесь» над папкой."><span class="tuile c5 prise"></span><div class="bulle">Отпустите здесь</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Открыть приложение</h3>
+      <p>Наведите указатель на папку и нажмите на приложение.</p>
+      <p>Открытое приложение из папки не добавляет кнопку на панель: под его значком появляется синяя черта. Нажмите на него, чтобы вернуть окно. Это отключается в настройках.</p>
+    </div><div class="scene" role="img" aria-label="Меню открытой папки с синей чертой под открытым приложением."><div class="menu"><b>Творчество</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Создание, перемещение и удаление папок</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + щелчок правой кнопкой по пустому месту панели или правый щелчок по папке: <b>Создать папку</b>.</li>
+        <li>Удерживайте левую кнопку на папке, чтобы передвинуть её на панели.</li>
+        <li>Правый щелчок по папке: переименовать или удалить. Приложения никогда не удаляются.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Настройка</h3>
+      <ul>
+        <li>Нажмите на имя папки, чтобы изменить его, и на квадратик рядом, чтобы выбрать цвет.</li>
+        <li>Правый щелчок, <b>Настройка папки</b>: сетка или список, с именами приложений или без.</li>
+        <li><b>Настройки TaskbarNest</b>: светлая или тёмная тема, прозрачность, 13 языков.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Окно цвета папки: палитра, шестнадцатеричный код и готовые цвета." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Окно цвета папки: палитра, шестнадцатеричный код и готовые цвета." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Правый щелчок по приложению в папке</h3>
+      <ul>
+        <li>Правый щелчок: открыть, запустить от имени администратора, открыть расположение файла, закрепить на начальном экране, свойства, убрать из папки.</li>
+        <li><kbd>Shift</kbd> + правый щелчок: полное меню Windows.</li>
+        <li>Перетащите приложение внутри меню, чтобы изменить порядок, или за его пределы, чтобы убрать из папки.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="Меню приложения: открыть, запустить от имени администратора, открыть расположение, закрепить на начальном экране, свойства, убрать из папки." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="Меню приложения: открыть, запустить от имени администратора, открыть расположение, закрепить на начальном экране, свойства, убрать из папки." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Сохранение, обновление, удаление</h3>
+      <ul>
+        <li><b>Настройки TaskbarNest</b>: экспортируйте папки в файл и импортируйте их на другом ПК.</li>
+        <li>Уведомление сообщает о новых версиях. Отметьте <b>Обновлять автоматически</b>, и делать ничего не придётся.</li>
+        <li>Чтобы удалить: скрытые значки у часов, правый щелчок по TaskbarNest, <b>Удалить TaskbarNest…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>Что TaskbarNest меняет в Windows</h2>
+  <p>В разделе <b>Параметры &gt; Система &gt; Многозадачность &gt; Рабочие столы</b>:</p>
+  <ul class="liste">
+    <li><b>Панель задач</b>: показывает окна всех виртуальных рабочих столов.</li>
+    <li><b>Alt+Tab</b>: показывает только окна текущего рабочего стола (обычная настройка Windows).</li>
+    <li><b>Второй виртуальный рабочий стол</b>: создаётся, если он только один. Там TaskbarNest держит свои невидимые окна.</li>
+    <li><b>Проводник</b>: может один раз перезапуститься, чтобы применить эти настройки. Панель исчезнет на несколько секунд.</li>
+  </ul>
+  <p><b>Если вы пользуетесь одним рабочим столом</b>, разницы не будет, кроме пустого второго стола в <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>Если их несколько</b>, окна всех рабочих столов будут на панели задач.</p>
+  <p>При удалении исходные настройки восстанавливаются.</p>
+  <p class="doux">Папки и настройки остаются на вашем ПК. TaskbarNest обращается только к GitHub для проверки обновлений.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Бесплатные программы. <a href="/mentions-legales.html">Правовая информация (на французском)</a> · <a href="/confidentialite.html">Конфиденциальность (на французском)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Сделать пожертвование</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Версия</dt><dd>${l.version}</dd><dt>Обновлено</dt><dd>${dateFr(l.maj)}</dd><dt>Выпущено</dt><dd>${dateFr(l.sortie)}</dd><dt>Языки</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Скачать"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

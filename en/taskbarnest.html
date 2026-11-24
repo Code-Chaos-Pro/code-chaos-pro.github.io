@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="App folders in the Windows 11 taskbar.">
+<link rel="canonical" href="https://codechaoslab.com/en/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Pages"><a href="index.html">Software</a><a href="contact.html?type=demande">Make a request</a><a href="contact.html?type=signalement">Report a problem</a><a href="apropos.html">About</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Creative</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Open or close the sample folder"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Organize your apps in folders, right in the Windows 11 taskbar.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Coming soon</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Free. Windows 11, 64-bit. No account and no administrator rights needed.</p>
+  </div>
+</section>
+
+<section>
+  <h2>How to use TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Install</h3>
+      <p>Open the downloaded file, choose the theme, then click <b>Install</b>.</p>
+      <p>TaskbarNest has no paid code signature, so Windows may show “Windows protected your PC”: click <b>More info</b>, then <b>Run anyway</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="TaskbarNest setup window, with two check boxes (Start menu and desktop shortcut) and the theme choice." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="TaskbarNest setup window, with two check boxes (Start menu and desktop shortcut) and the theme choice." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Add apps</h3>
+      <ul>
+        <li>Drag a taskbar icon above the folder, then drop it in the <b>Drop here</b> bubble.</li>
+        <li>A desktop shortcut can be dropped right on the folder.</li>
+        <li>Drop an app above another one to create a folder with both.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="An app dragged to the “Drop here” bubble, above the folder."><span class="tuile c5 prise"></span><div class="bulle">Drop here</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Open an app</h3>
+      <p>Point at the folder, then click the app.</p>
+      <p>An open app kept in a folder adds no button to the taskbar: a blue line appears under its icon. Click it to bring its window back. You can turn this off in the settings.</p>
+    </div><div class="scene" role="img" aria-label="The menu of an open folder, with a blue line under an open app."><div class="menu"><b>Creative</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Create, move and delete folders</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + right-click an empty area of the taskbar, or right-click a folder: <b>Create a folder</b>.</li>
+        <li>Hold the left mouse button on a folder to move it along the taskbar.</li>
+        <li>Right-click a folder: rename or delete. Your apps are never uninstalled.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Customize</h3>
+      <ul>
+        <li>Click the folder name to change it, and the small square next to it to choose its color.</li>
+        <li>Right-click, <b>Folder customization</b>: grid or list, with or without app names.</li>
+        <li><b>TaskbarNest settings</b>: light or dark theme, transparency, 13 languages.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Folder color window: color picker, hex code and preset colors." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Folder color window: color picker, hex code and preset colors." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Right-click an app in the folder</h3>
+      <ul>
+        <li>Right-click: open, run as administrator, open file location, pin to Start, properties, remove from folder.</li>
+        <li><kbd>Shift</kbd> + right-click: the full Windows menu.</li>
+        <li>Drag an app inside the menu to change the order, or out of the menu to remove it from the folder.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="App menu: open, run as administrator, open location, pin to Start, properties, remove from folder." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="App menu: open, run as administrator, open location, pin to Start, properties, remove from folder." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Back up, update, uninstall</h3>
+      <ul>
+        <li><b>TaskbarNest settings</b>: export your folders to a file and import them on another PC.</li>
+        <li>A notification announces new versions. Check <b>Update automatically</b> to have nothing to do.</li>
+        <li>To uninstall: hidden icons near the clock, right-click TaskbarNest, <b>Uninstall TaskbarNest…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>What TaskbarNest changes in Windows</h2>
+  <p>In <b>Settings &gt; System &gt; Multitasking &gt; Desktops</b>:</p>
+  <ul class="liste">
+    <li><b>Taskbar</b>: it shows the windows of all virtual desktops.</li>
+    <li><b>Alt+Tab</b>: it only shows the windows of the current desktop (the usual Windows setting).</li>
+    <li><b>Second virtual desktop</b>: created if there is only one. TaskbarNest keeps its invisible windows there.</li>
+    <li><b>Explorer</b>: it may restart once to apply these settings. The taskbar disappears for a few seconds.</li>
+  </ul>
+  <p><b>If you use a single desktop</b>, you will see no difference, except this empty second desktop in <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>If you use several</b>, the windows of all your desktops will be in the taskbar.</p>
+  <p>Uninstalling restores your original settings.</p>
+  <p class="doux">Your folders and settings stay on your PC. TaskbarNest only contacts GitHub to check for updates.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Free software. <a href="/mentions-legales.html">Legal notice (French)</a> · <a href="/confidentialite.html">Privacy (French)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Make a donation</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Version</dt><dd>${l.version}</dd><dt>Updated</dt><dd>${dateFr(l.maj)}</dd><dt>Released</dt><dd>${dateFr(l.sortie)}</dd><dt>Languages</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Download"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

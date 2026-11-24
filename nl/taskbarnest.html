@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="App-mappen in de taakbalk van Windows 11.">
+<link rel="canonical" href="https://codechaoslab.com/nl/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Pagina’s"><a href="index.html">Programma’s</a><a href="contact.html?type=demande">Een verzoek doen</a><a href="contact.html?type=signalement">Een probleem melden</a><a href="apropos.html">Over</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Creatief</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Voorbeeldmap openen of sluiten"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Orden je apps in mappen, direct in de taakbalk van Windows 11.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Binnenkort beschikbaar</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Gratis. Windows 11, 64-bits. Zonder account en zonder beheerdersrechten.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Zo gebruik je TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Installeren</h3>
+      <p>Open het gedownloade bestand, kies het thema en klik op <b>Installeren</b>.</p>
+      <p>TaskbarNest heeft geen betaalde handtekening. Windows kan daarom „Uw pc is beschermd door Windows” tonen: klik op <b>Meer informatie</b> en daarna op <b>Toch uitvoeren</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="Installatievenster van TaskbarNest, met twee vakjes (Startmenu en snelkoppeling op het bureaublad) en de themakeuze." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="Installatievenster van TaskbarNest, met twee vakjes (Startmenu en snelkoppeling op het bureaublad) en de themakeuze." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Apps toevoegen</h3>
+      <ul>
+        <li>Sleep een taakbalkpictogram boven de map en laat het los in de ballon <b>Hier neerzetten</b>.</li>
+        <li>Een snelkoppeling van het bureaublad zet je direct op de map neer.</li>
+        <li>Laat een app boven een andere los om een map met beide te maken.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="Een app die naar de ballon „Hier neerzetten” boven de map wordt gesleept."><span class="tuile c5 prise"></span><div class="bulle">Hier neerzetten</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Een app openen</h3>
+      <p>Beweeg de muis over de map en klik op de app.</p>
+      <p>Een geopende app in een map voegt geen knop toe aan de taakbalk: onder het pictogram verschijnt een blauwe streep. Klik erop om het venster naar voren te halen. Dit kun je uitzetten in de instellingen.</p>
+    </div><div class="scene" role="img" aria-label="Het menu van een geopende map, met een blauwe streep onder een geopende app."><div class="menu"><b>Creatief</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Mappen maken, verplaatsen en verwijderen</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + rechtsklik op een leeg deel van de taakbalk, of rechtsklik op een map: <b>Map maken</b>.</li>
+        <li>Houd de linkermuisknop op een map ingedrukt om die in de taakbalk te verplaatsen.</li>
+        <li>Rechtsklik op een map: naam wijzigen of verwijderen. Je apps worden nooit verwijderd.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Aanpassen</h3>
+      <ul>
+        <li>Klik op de mapnaam om die te wijzigen, en op het vierkantje ernaast om de kleur te kiezen.</li>
+        <li>Rechtsklik, <b>Map aanpassen</b>: raster of lijst, met of zonder app-namen.</li>
+        <li><b>TaskbarNest-instellingen</b>: licht of donker thema, transparantie, 13 talen.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Kleurvenster van een map: kleurkiezer, hexcode en vooraf ingestelde kleuren." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Kleurvenster van een map: kleurkiezer, hexcode en vooraf ingestelde kleuren." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Rechtsklik op een app in de map</h3>
+      <ul>
+        <li>Rechtsklik: openen, als administrator uitvoeren, bestandslocatie openen, aan Start vastmaken, eigenschappen, uit de map verwijderen.</li>
+        <li><kbd>Shift</kbd> + rechtsklik: het volledige Windows-menu.</li>
+        <li>Sleep een app binnen het menu om de volgorde te wijzigen, of uit het menu om die uit de map te halen.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="App-menu: openen, als administrator uitvoeren, locatie openen, aan Start vastmaken, eigenschappen, uit de map verwijderen." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="App-menu: openen, als administrator uitvoeren, locatie openen, aan Start vastmaken, eigenschappen, uit de map verwijderen." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Back-up, bijwerken, verwijderen</h3>
+      <ul>
+        <li><b>TaskbarNest-instellingen</b>: exporteer je mappen naar een bestand en importeer ze op een andere pc.</li>
+        <li>Een melding kondigt nieuwe versies aan. Vink <b>Automatisch bijwerken</b> aan, dan hoef je niets te doen.</li>
+        <li>Verwijderen: verborgen pictogrammen bij de klok, rechtsklik op TaskbarNest, <b>TaskbarNest verwijderen…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>Wat TaskbarNest in Windows wijzigt</h2>
+  <p>In <b>Instellingen &gt; Systeem &gt; Multitasking &gt; Bureaubladen</b>:</p>
+  <ul class="liste">
+    <li><b>Taakbalk</b>: die toont de vensters van alle virtuele bureaubladen.</li>
+    <li><b>Alt+Tab</b>: toont alleen de vensters van het huidige bureaublad (de gewone Windows-instelling).</li>
+    <li><b>Tweede virtuele bureaublad</b>: wordt gemaakt als er maar één is. TaskbarNest bewaart daar zijn onzichtbare vensters.</li>
+    <li><b>Verkenner</b>: kan één keer opnieuw starten om deze instellingen toe te passen. De taakbalk verdwijnt enkele seconden.</li>
+  </ul>
+  <p><b>Als je maar één bureaublad gebruikt</b>, merk je geen verschil, behalve dit lege tweede bureaublad in <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>Als je er meer gebruikt</b>, staan de vensters van al je bureaubladen in de taakbalk.</p>
+  <p>Bij het verwijderen worden je oorspronkelijke instellingen hersteld.</p>
+  <p class="doux">Je mappen en instellingen blijven op je pc. TaskbarNest neemt alleen contact op met GitHub om op updates te controleren.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Gratis programma’s. <a href="/mentions-legales.html">Juridische informatie (Frans)</a> · <a href="/confidentialite.html">Privacy (Frans)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Doneren</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Versie</dt><dd>${l.version}</dd><dt>Bijgewerkt</dt><dd>${dateFr(l.maj)}</dd><dt>Uitgebracht</dt><dd>${dateFr(l.sortie)}</dd><dt>Talen</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Downloaden"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

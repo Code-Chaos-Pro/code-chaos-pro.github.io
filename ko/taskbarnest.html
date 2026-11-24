@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Windows 11 작업 표시줄의 앱 폴더.">
+<link rel="canonical" href="https://codechaoslab.com/ko/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="페이지"><a href="index.html">소프트웨어</a><a href="contact.html?type=demande">요청 보내기</a><a href="contact.html?type=signalement">문제 신고</a><a href="apropos.html">소개</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>창작</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="예시 폴더 열기 또는 닫기"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Windows 11 작업 표시줄에서 바로 앱을 폴더로 정리하세요.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">곧 제공 예정</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">무료. Windows 11, 64비트. 계정과 관리자 권한이 필요 없습니다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>TaskbarNest 사용법</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>설치</h3>
+      <p>다운로드한 파일을 열고 테마를 선택한 다음 <b>설치</b>를 클릭합니다.</p>
+      <p>TaskbarNest에는 유료 서명이 없어 “Windows의 PC 보호”가 표시될 수 있습니다. <b>추가 정보</b>를 클릭한 다음 <b>실행</b>을 클릭하세요.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="TaskbarNest 설치 창: 확인란 두 개(시작 메뉴, 바탕 화면 바로 가기)와 테마 선택." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="TaskbarNest 설치 창: 확인란 두 개(시작 메뉴, 바탕 화면 바로 가기)와 테마 선택." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>앱 추가하기</h3>
+      <ul>
+        <li>작업 표시줄 아이콘을 폴더 위로 끌어 <b>여기에 놓기</b> 풍선에 놓습니다.</li>
+        <li>바탕 화면 바로 가기는 폴더 위에 바로 놓으면 됩니다.</li>
+        <li>앱을 다른 앱 위에 놓으면 두 앱이 든 폴더가 만들어집니다.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="폴더 위의 “여기에 놓기” 풍선으로 끌어가는 앱."><span class="tuile c5 prise"></span><div class="bulle">여기에 놓기</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>앱 열기</h3>
+      <p>마우스를 폴더 위에 올린 다음 앱을 클릭합니다.</p>
+      <p>폴더에 넣은 앱을 열어도 작업 표시줄에 단추가 추가되지 않고 아이콘 아래에 파란 선이 나타납니다. 클릭하면 창이 다시 나옵니다. 설정에서 끌 수 있습니다.</p>
+    </div><div class="scene" role="img" aria-label="열린 앱 아래에 파란 선이 있는 폴더 메뉴."><div class="menu"><b>창작</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>폴더 만들기, 이동, 삭제</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + 작업 표시줄 빈 곳을 오른쪽 클릭하거나 폴더를 오른쪽 클릭: <b>폴더 만들기</b>.</li>
+        <li>폴더를 왼쪽 클릭으로 누른 채 작업 표시줄에서 옮길 수 있습니다.</li>
+        <li>폴더를 오른쪽 클릭: 이름 바꾸기 또는 삭제. 앱은 절대 제거되지 않습니다.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>사용자 지정</h3>
+      <ul>
+        <li>폴더 이름을 클릭하면 바꿀 수 있고, 옆의 작은 사각형으로 색을 고를 수 있습니다.</li>
+        <li>오른쪽 클릭, <b>폴더 사용자 지정</b>: 격자 또는 목록, 앱 이름 표시 또는 숨김.</li>
+        <li><b>TaskbarNest 설정</b>: 밝은/어두운 테마, 투명도, 13개 언어.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="폴더 색 창: 색상 선택기, 16진수 코드, 기본 색상." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="폴더 색 창: 색상 선택기, 16진수 코드, 기본 색상." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>폴더의 앱을 오른쪽 클릭</h3>
+      <ul>
+        <li>오른쪽 클릭: 열기, 관리자 권한으로 실행, 파일 위치 열기, 시작에 고정, 속성, 폴더에서 제거.</li>
+        <li><kbd>Shift</kbd> + 오른쪽 클릭: 전체 Windows 메뉴.</li>
+        <li>메뉴 안에서 끌면 순서를 바꾸고, 메뉴 밖으로 끌면 폴더에서 꺼낼 수 있습니다.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="앱 메뉴: 열기, 관리자 권한으로 실행, 위치 열기, 시작에 고정, 속성, 폴더에서 제거." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="앱 메뉴: 열기, 관리자 권한으로 실행, 위치 열기, 시작에 고정, 속성, 폴더에서 제거." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>백업, 업데이트, 제거</h3>
+      <ul>
+        <li><b>TaskbarNest 설정</b>: 폴더를 파일로 내보내고 다른 PC에서 가져올 수 있습니다.</li>
+        <li>새 버전은 알림으로 알려 드립니다. <b>자동으로 업데이트</b>를 선택하면 아무것도 할 필요가 없습니다.</li>
+        <li>제거: 시계 옆의 숨겨진 아이콘, TaskbarNest 오른쪽 클릭, <b>TaskbarNest 제거…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>TaskbarNest가 Windows에서 바꾸는 것</h2>
+  <p><b>설정 &gt; 시스템 &gt; 멀티태스킹 &gt; 데스크톱</b>:</p>
+  <ul class="liste">
+    <li><b>작업 표시줄</b>: 모든 가상 데스크톱의 창을 표시합니다.</li>
+    <li><b>Alt+Tab</b>: 현재 데스크톱의 창만 표시합니다(Windows의 일반 설정).</li>
+    <li><b>두 번째 가상 데스크톱</b>: 하나뿐이면 만들어집니다. TaskbarNest가 보이지 않는 창을 그곳에 둡니다.</li>
+    <li><b>탐색기</b>: 이 설정을 적용하려고 한 번 다시 시작될 수 있습니다. 작업 표시줄이 몇 초간 사라집니다.</li>
+  </ul>
+  <p><b>데스크톱을 하나만 쓴다면</b> <kbd>Win</kbd> + <kbd>Tab</kbd>에 보이는 빈 두 번째 데스크톱 말고는 차이가 없습니다.</p>
+  <p><b>여러 개를 쓴다면</b> 모든 데스크톱의 창이 작업 표시줄에 표시됩니다.</p>
+  <p>제거하면 원래 설정으로 돌아갑니다.</p>
+  <p class="doux">폴더와 설정은 PC에 남습니다. TaskbarNest는 업데이트 확인을 위해 GitHub에만 연결합니다.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. 무료 소프트웨어. <a href="/mentions-legales.html">법적 고지 (프랑스어)</a> · <a href="/confidentialite.html">개인정보 (프랑스어)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>후원하기</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>버전</dt><dd>${l.version}</dd><dt>업데이트</dt><dd>${dateFr(l.maj)}</dd><dt>출시</dt><dd>${dateFr(l.sortie)}</dd><dt>언어</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "다운로드"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

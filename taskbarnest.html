@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Des dossiers d'applis dans la barre des tâches de Windows 11.">
+<link rel="canonical" href="https://codechaoslab.com/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Pages"><a href="index.html">Logiciels</a><a href="contact.html?type=demande">Faire une demande</a><a href="contact.html?type=signalement">Envoyer un signalement</a><a href="apropos.html">À propos</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Création</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Ouvrir ou fermer le dossier d’exemple"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Rangez vos applis dans des dossiers, directement dans la barre des tâches de Windows 11.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Bientôt disponible</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Gratuit. Windows 11, 64 bits. Sans compte et sans droits administrateur.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Comment utiliser TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Installer</h3>
+      <p>Ouvrez le fichier téléchargé, choisissez le thème, puis cliquez sur <b>Installer</b>.</p>
+      <p>TaskbarNest n'a pas de signature payante. Windows peut donc afficher « Windows a protégé votre ordinateur » : cliquez sur <b>Informations complémentaires</b>, puis sur <b>Exécuter quand même</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="Fenêtre d'installation de TaskbarNest, avec deux cases (menu Démarrer et raccourci sur le bureau) et le choix du thème." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="Fenêtre d'installation de TaskbarNest, avec deux cases (menu Démarrer et raccourci sur le bureau) et le choix du thème." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Ajouter des applis</h3>
+      <ul>
+        <li>Faites glisser une icône de la barre des tâches au-dessus du dossier, puis lâchez-la dans la bulle <b>Déposer ici</b>.</li>
+        <li>Un raccourci du bureau se dépose directement sur le dossier.</li>
+        <li>Lâchez une appli au-dessus d'une autre pour créer un dossier avec les deux.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="Une appli glissée vers la bulle « Déposer ici », au-dessus du dossier."><span class="tuile c5 prise"></span><div class="bulle">Déposer ici</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Ouvrir une appli</h3>
+      <p>Passez la souris sur le dossier, puis cliquez sur l'appli.</p>
+      <p>Une appli rangée et ouverte n'ajoute pas de bouton dans la barre : un trait bleu apparaît sous son icône. Cliquez dessus pour ramener sa fenêtre. Ce réglage se désactive dans les paramètres.</p>
+    </div><div class="scene" role="img" aria-label="Le menu d'un dossier ouvert, avec un trait bleu sous une appli ouverte."><div class="menu"><b>Création</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Créer, déplacer et supprimer des dossiers</h3>
+      <ul>
+        <li><kbd>Maj</kbd> + clic droit sur une zone vide de la barre, ou clic droit sur un dossier : <b>Créer un dossier</b>.</li>
+        <li>Maintenez le clic gauche sur un dossier pour le déplacer dans la barre.</li>
+        <li>Clic droit sur un dossier : renommer ou supprimer. Vos applications ne sont jamais désinstallées.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Personnaliser</h3>
+      <ul>
+        <li>Cliquez sur le nom du dossier pour le changer, et sur le petit carré à côté pour choisir sa couleur.</li>
+        <li>Clic droit, <b>Personnalisation du dossier</b> : grille ou liste, avec ou sans le nom des applis.</li>
+        <li><b>Paramètres de TaskbarNest</b> : thème clair ou sombre, transparence, 13 langues.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Fenêtre de couleur d'un dossier : nuancier, code hexadécimal et couleurs prédéfinies." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Fenêtre de couleur d'un dossier : nuancier, code hexadécimal et couleurs prédéfinies." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Clic droit sur une appli du dossier</h3>
+      <ul>
+        <li>Clic droit : ouvrir, exécuter en tant qu'administrateur, ouvrir l'emplacement du fichier, épingler au menu Démarrer, propriétés, retirer du dossier.</li>
+        <li><kbd>Maj</kbd> + clic droit : le menu complet de Windows.</li>
+        <li>Faites glisser une appli dans le menu pour changer l'ordre, ou hors du menu pour la sortir du dossier.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="Menu d'une appli : ouvrir, exécuter en tant qu'administrateur, ouvrir l'emplacement, épingler au menu Démarrer, propriétés, retirer du dossier." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="Menu d'une appli : ouvrir, exécuter en tant qu'administrateur, ouvrir l'emplacement, épingler au menu Démarrer, propriétés, retirer du dossier." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Sauvegarder, mettre à jour, désinstaller</h3>
+      <ul>
+        <li><b>Paramètres de TaskbarNest</b> : exportez vos dossiers dans un fichier, et réimportez-les sur un autre PC.</li>
+        <li>Une notification annonce les nouvelles versions. Cochez <b>Mettre à jour automatiquement</b> pour ne rien avoir à faire.</li>
+        <li>Pour désinstaller : icônes cachées près de l'heure, clic droit sur TaskbarNest, <b>Désinstaller TaskbarNest…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>Ce que TaskbarNest change dans Windows</h2>
+  <p>Dans <b>Paramètres &gt; Système &gt; Multitâche &gt; Bureaux</b> :</p>
+  <ul class="liste">
+    <li><b>Barre des tâches</b> : elle affiche les fenêtres de tous les bureaux virtuels.</li>
+    <li><b>Alt+Tab</b> : il n'affiche que les fenêtres du bureau actuel (le réglage habituel de Windows).</li>
+    <li><b>Deuxième bureau virtuel</b> : il est créé s'il n'y en a qu'un. TaskbarNest y garde ses fenêtres invisibles.</li>
+    <li><b>Explorateur</b> : il peut redémarrer une fois pour appliquer ces réglages. La barre disparaît quelques secondes.</li>
+  </ul>
+  <p><b>Si vous n'utilisez qu'un bureau</b>, vous ne verrez pas de différence, à part ce deuxième bureau, vide, dans <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>Si vous en utilisez plusieurs</b>, les fenêtres de tous vos bureaux seront dans la barre des tâches.</p>
+  <p>La désinstallation remet vos réglages d'origine.</p>
+  <p class="doux">Vos dossiers et réglages restent sur votre PC. TaskbarNest contacte seulement GitHub pour vérifier les mises à jour.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Logiciels gratuits. <a href="mentions-legales.html">Mentions légales</a> · <a href="confidentialite.html">Confidentialité</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Faire un don</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Version</dt><dd>${l.version}</dd><dt>Mis à jour</dt><dd>${dateFr(l.maj)}</dd><dt>Sorti</dt><dd>${dateFr(l.sortie)}</dd><dt>Langues</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Télécharger"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

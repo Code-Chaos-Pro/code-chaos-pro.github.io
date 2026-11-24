@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Связаться с нами</title>
+<meta name="description" content="Отправить пожелание или сообщить о проблеме.">
+<link rel="canonical" href="https://codechaoslab.com/ru/contact.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Страницы"><a href="index.html">Программы</a><a href="contact.html?type=demande">Отправить пожелание</a><a href="contact.html?type=signalement">Сообщить о проблеме</a><a href="apropos.html">О сайте</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1 id="titre">Отправить пожелание</h1>
+  <p id="etat" role="status">Загрузка…</p>
+  <noscript><p>Напишите на <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
+</section>
+<div class="connexion" id="connexion"></div>
+<section class="encart" id="envoye" tabindex="-1" hidden><h2>Сообщение отправлено. Спасибо!</h2><p>Если нужен ответ, он придёт по электронной почте.</p><div><button class="bouton" type="button" id="encore">Написать ещё</button></div></section>
+<form id="formulaire" hidden>
+  <fieldset><legend hidden>Тип сообщения</legend>
+    <label><input type="radio" name="type" id="t-demande" value="demande" checked> Пожелание</label>
+    <label><input type="radio" name="type" id="t-signalement" value="signalement"> Проблема</label>
+  </fieldset>
+  <label class="champ" for="logiciel">Программа <select id="logiciel"></select></label>
+  <label class="champ" for="sujet">Тема <select id="sujet"></select></label>
+  <label class="champ" for="texte">Описание <textarea id="texte" maxlength="4000" required></textarea></label>
+  <label class="champ" for="images">Изображения (необязательно, не более 5) <input type="file" id="images" accept="image/*" multiple></label>
+  <div class="apercus" id="apercus"></div>
+  <p class="doux">Сообщение используется только для ответа вам. <a href="/confidentialite.html">Конфиденциальность (на французском)</a></p>
+  <div><button class="bouton" id="envoyer">Отправить</button></div>
+</form>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Бесплатные программы. <a href="/mentions-legales.html">Правовая информация (на французском)</a> · <a href="/confidentialite.html">Конфиденциальность (на французском)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Сделать пожертвование</a>
+</div></footer>
+<script>
+const SUJETS = {
+  demande: [['fonction', "Новая функция"], ['amelioration', "Улучшить функцию"], ['langue', "Новый язык"], ['autre', "Другое"]],
+  signalement: [['dossier', "Папка не отображается"], ['ouverture', "Приложение не открывается"], ['glisser', "Перетаскивание"], ['barre', "Панель задач тормозит или зависает"], ['affichage', "Отображение или текст"], ['traduction', "Перевод"], ['installation', "Установка или обновление"], ['desinstallation', "Удаление"], ['autre', "Другое"]],
+};
+const $ = id => document.getElementById(id), args = new URLSearchParams(location.search);
+const options = (id, liste) => $(id).replaceChildren(...liste.map(([v, t]) => new Option(t, v)));
+options('logiciel', LOGICIELS.map(l => [l.id, l.nom]).concat([['autre', "Другое"]]));
+if (LOGICIELS.some(l => l.id === args.get('logiciel'))) $('logiciel').value = args.get('logiciel');
+if (args.get('type') === 'signalement') $('t-signalement').checked = true;
+function choisir() {
+  const type = $('t-signalement').checked ? 'signalement' : 'demande';
+  $('titre').textContent = document.title = type === 'demande' ? "Отправить пожелание" : "Сообщить о проблеме";
+  options('sujet', SUJETS[type]);
+}
+$('t-demande').onchange = $('t-signalement').onchange = choisir; choisir();
+$('images').onchange = e => {
+  $('apercus').querySelectorAll('img').forEach(i => URL.revokeObjectURL(i.src));
+  $('apercus').replaceChildren(...[...e.target.files].slice(0, 5).map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
+};
+
+const dire = (texte, secours) => ecrire($('etat'), texte, secours);
+function montrer() {
+  $('formulaire').hidden = !session; $('envoye').hidden = true;
+  return montrerCompte($('etat'), $('connexion'), "Войдите, чтобы написать. Это защищает от роботов.");
+}
+// Réduite en JPEG : moins lourde, et sans les données cachées (lieu de la photo).
+async function reduire(fichier) {
+  const image = await createImageBitmap(fichier), t = Math.min(1, 1920 / Math.max(image.width, image.height));
+  const c = document.createElement('canvas'); c.width = Math.max(1, image.width * t); c.height = Math.max(1, image.height * t);
+  const d = c.getContext('2d'); d.fillStyle = '#fff'; d.fillRect(0, 0, c.width, c.height); d.drawImage(image, 0, 0, c.width, c.height);
+  return new Promise((ok, non) => c.toBlob(b => b ? ok(b) : non(new Error('image')), 'image/jpeg', .85));
+}
+$('formulaire').onsubmit = async e => {
+  e.preventDefault();
+  if (!$('texte').value.trim()) return dire("Напишите описание.");
+  $('envoyer').disabled = true;
+  dire("Отправка…");
+  try {
+    const images = [];
+    for (const f of [...$('images').files].slice(0, 5)) {
+      const chemin = `${session.id}/${crypto.randomUUID()}.jpg`;
+      await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
+      images.push(chemin);
+    }
+    await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
+    $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus();
+    return dire('');
+  } catch (x) {
+    if (x.code === 401) { session = null; garder('session'); dire("Сеанс истёк. Скопируйте текст и обновите страницу."); }
+    else if (x.message === 'image') dire("Одно из изображений не удалось прочитать. Уберите его и повторите попытку.");
+    else if (x.message.includes('limite')) dire("Вы уже отправили 5 сообщений за 24 часа. Повторите позже.");
+    else dire("Сообщение не отправлено.", true);
+  } finally { $('envoyer').disabled = false; }
+  $('etat').scrollIntoView({ block: 'center' });
+};
+$('encore').onclick = montrer;
+document.addEventListener('compte', montrer);
+compte.then(async ok => { await montrer(); if (!ok) dire("Не удалось войти. Повторите попытку.", true); });
+</script>
+</body>
+</html>

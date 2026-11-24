@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="App-Ordner in der Taskleiste von Windows 11.">
+<link rel="canonical" href="https://codechaoslab.com/de/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Seiten"><a href="index.html">Programme</a><a href="contact.html?type=demande">Wunsch einreichen</a><a href="contact.html?type=signalement">Problem melden</a><a href="apropos.html">Über uns</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Kreativ</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Beispielordner öffnen oder schließen"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Ordne deine Apps in Ordnern, direkt in der Taskleiste von Windows 11.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Bald verfügbar</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Kostenlos. Windows 11, 64 Bit. Ohne Konto und ohne Administratorrechte.</p>
+  </div>
+</section>
+
+<section>
+  <h2>So verwendest du TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Installieren</h3>
+      <p>Öffne die heruntergeladene Datei, wähle das Design und klicke auf <b>Installieren</b>.</p>
+      <p>TaskbarNest hat keine kostenpflichtige Signatur. Windows kann deshalb „Der Computer wurde durch Windows geschützt“ anzeigen: Klicke auf <b>Weitere Informationen</b> und dann auf <b>Trotzdem ausführen</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="Installationsfenster von TaskbarNest mit zwei Kästchen (Startmenü und Desktopverknüpfung) und der Designauswahl." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="Installationsfenster von TaskbarNest mit zwei Kästchen (Startmenü und Desktopverknüpfung) und der Designauswahl." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Apps hinzufügen</h3>
+      <ul>
+        <li>Ziehe ein Symbol der Taskleiste über den Ordner und lege es in der Blase <b>Hier ablegen</b> ab.</li>
+        <li>Eine Desktopverknüpfung legst du direkt auf dem Ordner ab.</li>
+        <li>Lege eine App über einer anderen ab, um einen Ordner mit beiden zu erstellen.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="Eine App, die zur Blase „Hier ablegen“ über dem Ordner gezogen wird."><span class="tuile c5 prise"></span><div class="bulle">Hier ablegen</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Eine App öffnen</h3>
+      <p>Fahre mit der Maus über den Ordner und klicke auf die App.</p>
+      <p>Eine geöffnete App im Ordner fügt der Taskleiste keine Schaltfläche hinzu: Unter ihrem Symbol erscheint ein blauer Strich. Klicke darauf, um ihr Fenster nach vorne zu holen. Das lässt sich in den Einstellungen abschalten.</p>
+    </div><div class="scene" role="img" aria-label="Das Menü eines geöffneten Ordners mit einem blauen Strich unter einer geöffneten App."><div class="menu"><b>Kreativ</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Ordner erstellen, verschieben und löschen</h3>
+      <ul>
+        <li><kbd>Umschalt</kbd> + Rechtsklick auf eine freie Stelle der Taskleiste oder Rechtsklick auf einen Ordner: <b>Ordner erstellen</b>.</li>
+        <li>Halte die linke Maustaste auf einem Ordner gedrückt, um ihn in der Leiste zu verschieben.</li>
+        <li>Rechtsklick auf einen Ordner: umbenennen oder löschen. Deine Apps werden nie deinstalliert.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Anpassen</h3>
+      <ul>
+        <li>Klicke auf den Ordnernamen, um ihn zu ändern, und auf das kleine Quadrat daneben, um die Farbe zu wählen.</li>
+        <li>Rechtsklick, <b>Ordner anpassen</b>: Raster oder Liste, mit oder ohne App-Namen.</li>
+        <li><b>TaskbarNest-Einstellungen</b>: helles oder dunkles Design, Transparenz, 13 Sprachen.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Farbfenster eines Ordners: Farbwähler, Hex-Code und vordefinierte Farben." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Farbfenster eines Ordners: Farbwähler, Hex-Code und vordefinierte Farben." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Rechtsklick auf eine App im Ordner</h3>
+      <ul>
+        <li>Rechtsklick: öffnen, als Administrator ausführen, Dateispeicherort öffnen, an Start anheften, Eigenschaften, aus dem Ordner entfernen.</li>
+        <li><kbd>Umschalt</kbd> + Rechtsklick: das vollständige Windows-Menü.</li>
+        <li>Ziehe eine App im Menü, um die Reihenfolge zu ändern, oder aus dem Menü, um sie aus dem Ordner zu nehmen.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="App-Menü: öffnen, als Administrator ausführen, Speicherort öffnen, an Start anheften, Eigenschaften, aus dem Ordner entfernen." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="App-Menü: öffnen, als Administrator ausführen, Speicherort öffnen, an Start anheften, Eigenschaften, aus dem Ordner entfernen." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Sichern, aktualisieren, deinstallieren</h3>
+      <ul>
+        <li><b>TaskbarNest-Einstellungen</b>: Exportiere deine Ordner in eine Datei und importiere sie auf einem anderen PC.</li>
+        <li>Eine Benachrichtigung kündigt neue Versionen an. Aktiviere <b>Automatisch aktualisieren</b>, dann musst du nichts tun.</li>
+        <li>Deinstallieren: ausgeblendete Symbole neben der Uhr, Rechtsklick auf TaskbarNest, <b>TaskbarNest deinstallieren…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>Was TaskbarNest in Windows ändert</h2>
+  <p>Unter <b>Einstellungen &gt; System &gt; Multitasking &gt; Desktops</b>:</p>
+  <ul class="liste">
+    <li><b>Taskleiste</b>: Sie zeigt die Fenster aller virtuellen Desktops.</li>
+    <li><b>Alt+Tab</b>: zeigt nur die Fenster des aktuellen Desktops (die übliche Windows-Einstellung).</li>
+    <li><b>Zweiter virtueller Desktop</b>: wird erstellt, wenn es nur einen gibt. TaskbarNest behält dort seine unsichtbaren Fenster.</li>
+    <li><b>Explorer</b>: kann einmal neu starten, um diese Einstellungen anzuwenden. Die Leiste verschwindet einige Sekunden.</li>
+  </ul>
+  <p><b>Wenn du nur einen Desktop nutzt</b>, merkst du keinen Unterschied, außer dem leeren zweiten Desktop in <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>Wenn du mehrere nutzt</b>, erscheinen die Fenster aller Desktops in der Taskleiste.</p>
+  <p>Die Deinstallation stellt deine ursprünglichen Einstellungen wieder her.</p>
+  <p class="doux">Deine Ordner und Einstellungen bleiben auf deinem PC. TaskbarNest kontaktiert nur GitHub, um nach Updates zu suchen.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Kostenlose Programme. <a href="/mentions-legales.html">Impressum (Französisch)</a> · <a href="/confidentialite.html">Datenschutz (Französisch)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Spenden</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Version</dt><dd>${l.version}</dd><dt>Aktualisiert</dt><dd>${dateFr(l.maj)}</dd><dt>Erschienen</dt><dd>${dateFr(l.sortie)}</dd><dt>Sprachen</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Herunterladen"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

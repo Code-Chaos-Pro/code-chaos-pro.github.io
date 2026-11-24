@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>お問い合わせ</title>
+<meta name="description" content="要望や問題の報告を送る。">
+<link rel="canonical" href="https://codechaoslab.com/ja/contact.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="ページ"><a href="index.html">ソフト</a><a href="contact.html?type=demande">要望を送る</a><a href="contact.html?type=signalement">問題を報告</a><a href="apropos.html">このサイトについて</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1 id="titre">要望を送る</h1>
+  <p id="etat" role="status">読み込み中…</p>
+  <noscript><p>宛先： <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
+</section>
+<div class="connexion" id="connexion"></div>
+<section class="encart" id="envoye" tabindex="-1" hidden><h2>送信しました。ありがとうございます！</h2><p>返信が必要な場合はメールでお送りします。</p><div><button class="bouton" type="button" id="encore">別のメッセージを書く</button></div></section>
+<form id="formulaire" hidden>
+  <fieldset><legend hidden>種類</legend>
+    <label><input type="radio" name="type" id="t-demande" value="demande" checked> 要望</label>
+    <label><input type="radio" name="type" id="t-signalement" value="signalement"> 問題の報告</label>
+  </fieldset>
+  <label class="champ" for="logiciel">ソフト <select id="logiciel"></select></label>
+  <label class="champ" for="sujet">件名 <select id="sujet"></select></label>
+  <label class="champ" for="texte">説明 <textarea id="texte" maxlength="4000" required></textarea></label>
+  <label class="champ" for="images">画像（任意、5 枚まで） <input type="file" id="images" accept="image/*" multiple></label>
+  <div class="apercus" id="apercus"></div>
+  <p class="doux">メッセージは返信のためにのみ使用します。 <a href="/confidentialite.html">プライバシー（フランス語）</a></p>
+  <div><button class="bouton" id="envoyer">送信</button></div>
+</form>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos。無料ソフト。 <a href="/mentions-legales.html">法的事項（フランス語）</a> · <a href="/confidentialite.html">プライバシー（フランス語）</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>寄付する</a>
+</div></footer>
+<script>
+const SUJETS = {
+  demande: [['fonction', "新機能"], ['amelioration', "機能の改善"], ['langue', "新しい言語"], ['autre', "その他"]],
+  signalement: [['dossier', "フォルダーが表示されない"], ['ouverture', "アプリが開かない"], ['glisser', "ドラッグ＆ドロップ"], ['barre', "タスクバーが遅い・固まる"], ['affichage', "表示・文字"], ['traduction', "翻訳"], ['installation', "インストール・更新"], ['desinstallation', "アンインストール"], ['autre', "その他"]],
+};
+const $ = id => document.getElementById(id), args = new URLSearchParams(location.search);
+const options = (id, liste) => $(id).replaceChildren(...liste.map(([v, t]) => new Option(t, v)));
+options('logiciel', LOGICIELS.map(l => [l.id, l.nom]).concat([['autre', "その他"]]));
+if (LOGICIELS.some(l => l.id === args.get('logiciel'))) $('logiciel').value = args.get('logiciel');
+if (args.get('type') === 'signalement') $('t-signalement').checked = true;
+function choisir() {
+  const type = $('t-signalement').checked ? 'signalement' : 'demande';
+  $('titre').textContent = document.title = type === 'demande' ? "要望を送る" : "問題を報告";
+  options('sujet', SUJETS[type]);
+}
+$('t-demande').onchange = $('t-signalement').onchange = choisir; choisir();
+$('images').onchange = e => {
+  $('apercus').querySelectorAll('img').forEach(i => URL.revokeObjectURL(i.src));
+  $('apercus').replaceChildren(...[...e.target.files].slice(0, 5).map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
+};
+
+const dire = (texte, secours) => ecrire($('etat'), texte, secours);
+function montrer() {
+  $('formulaire').hidden = !session; $('envoye').hidden = true;
+  return montrerCompte($('etat'), $('connexion'), "書き込むにはサインインしてください。ロボット対策です。");
+}
+// Réduite en JPEG : moins lourde, et sans les données cachées (lieu de la photo).
+async function reduire(fichier) {
+  const image = await createImageBitmap(fichier), t = Math.min(1, 1920 / Math.max(image.width, image.height));
+  const c = document.createElement('canvas'); c.width = Math.max(1, image.width * t); c.height = Math.max(1, image.height * t);
+  const d = c.getContext('2d'); d.fillStyle = '#fff'; d.fillRect(0, 0, c.width, c.height); d.drawImage(image, 0, 0, c.width, c.height);
+  return new Promise((ok, non) => c.toBlob(b => b ? ok(b) : non(new Error('image')), 'image/jpeg', .85));
+}
+$('formulaire').onsubmit = async e => {
+  e.preventDefault();
+  if (!$('texte').value.trim()) return dire("説明を入力してください。");
+  $('envoyer').disabled = true;
+  dire("送信中…");
+  try {
+    const images = [];
+    for (const f of [...$('images').files].slice(0, 5)) {
+      const chemin = `${session.id}/${crypto.randomUUID()}.jpg`;
+      await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
+      images.push(chemin);
+    }
+    await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
+    $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus();
+    return dire('');
+  } catch (x) {
+    if (x.code === 401) { session = null; garder('session'); dire("セッションの有効期限が切れました。文章をコピーしてから再読み込みしてください。"); }
+    else if (x.message === 'image') dire("読み込めない画像があります。削除してもう一度お試しください。");
+    else if (x.message.includes('limite')) dire("24 時間以内に 5 件送信済みです。後でもう一度お試しください。");
+    else dire("送信できませんでした。", true);
+  } finally { $('envoyer').disabled = false; }
+  $('etat').scrollIntoView({ block: 'center' });
+};
+$('encore').onclick = montrer;
+document.addEventListener('compte', montrer);
+compte.then(async ok => { await montrer(); if (!ok) dire("サインインできませんでした。もう一度お試しください。", true); });
+</script>
+</body>
+</html>

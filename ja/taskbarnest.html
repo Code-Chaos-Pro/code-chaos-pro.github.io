@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Windows 11 のタスクバーにアプリのフォルダーを。">
+<link rel="canonical" href="https://codechaoslab.com/ja/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="ページ"><a href="index.html">ソフト</a><a href="contact.html?type=demande">要望を送る</a><a href="contact.html?type=signalement">問題を報告</a><a href="apropos.html">このサイトについて</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>制作</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="サンプルフォルダーを開閉"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Windows 11 のタスクバーで、アプリをフォルダーにまとめられます。</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">近日公開</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">無料。Windows 11（64 ビット）。アカウントも管理者権限も不要です。</p>
+  </div>
+</section>
+
+<section>
+  <h2>TaskbarNest の使い方</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>インストール</h3>
+      <p>ダウンロードしたファイルを開き、テーマを選んで<b>インストール</b>をクリックします。</p>
+      <p>TaskbarNest には有料の署名がないため、「Windows によって PC が保護されました」と表示されることがあります。<b>詳細情報</b>、<b>実行</b>の順にクリックしてください。</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="TaskbarNest のインストール画面。スタートメニューとデスクトップのショートカットの 2 つのチェックボックスとテーマの選択。" loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="TaskbarNest のインストール画面。スタートメニューとデスクトップのショートカットの 2 つのチェックボックスとテーマの選択。" loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>アプリを追加する</h3>
+      <ul>
+        <li>タスクバーのアイコンをフォルダーの上へドラッグし、<b>ここにドロップ</b>の吹き出しに放します。</li>
+        <li>デスクトップのショートカットは、フォルダーに直接ドロップできます。</li>
+        <li>アプリを別のアプリの上で放すと、両方が入ったフォルダーが作られます。</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="フォルダーの上の「ここにドロップ」へドラッグされるアプリ。"><span class="tuile c5 prise"></span><div class="bulle">ここにドロップ</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>アプリを開く</h3>
+      <p>フォルダーにマウスを重ね、アプリをクリックします。</p>
+      <p>フォルダー内のアプリを開いても、タスクバーにボタンは増えません。アイコンの下に青い線が表示され、クリックするとウィンドウが前面に戻ります。設定で無効にできます。</p>
+    </div><div class="scene" role="img" aria-label="開いたフォルダーのメニュー。開いているアプリの下に青い線。"><div class="menu"><b>制作</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>フォルダーの作成・移動・削除</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + タスクバーの空いた場所を右クリック、またはフォルダーを右クリック：<b>フォルダーを作成</b>。</li>
+        <li>フォルダーを左クリックで押し続けると、タスクバー内で移動できます。</li>
+        <li>フォルダーを右クリック：名前の変更または削除。アプリがアンインストールされることはありません。</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>カスタマイズ</h3>
+      <ul>
+        <li>フォルダー名をクリックすると変更でき、隣の小さな四角で色を選べます。</li>
+        <li>右クリック、<b>フォルダーのカスタマイズ</b>：グリッドまたはリスト、アプリ名の表示・非表示。</li>
+        <li><b>TaskbarNest の設定</b>：ライト／ダークテーマ、透明度、13 言語。</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="フォルダーの色の画面：カラーピッカー、16 進コード、プリセットの色。" loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="フォルダーの色の画面：カラーピッカー、16 進コード、プリセットの色。" loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>フォルダー内のアプリを右クリック</h3>
+      <ul>
+        <li>右クリック：開く、管理者として実行、ファイルの場所を開く、スタートにピン留め、プロパティ、フォルダーから削除。</li>
+        <li><kbd>Shift</kbd> + 右クリック：Windows の完全なメニュー。</li>
+        <li>メニュー内でドラッグすると順番を変更でき、メニューの外へドラッグするとフォルダーから出せます。</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="アプリのメニュー：開く、管理者として実行、場所を開く、スタートにピン留め、プロパティ、フォルダーから削除。" loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="アプリのメニュー：開く、管理者として実行、場所を開く、スタートにピン留め、プロパティ、フォルダーから削除。" loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>バックアップ・更新・アンインストール</h3>
+      <ul>
+        <li><b>TaskbarNest の設定</b>：フォルダーをファイルに書き出し、別の PC で読み込めます。</li>
+        <li>新しいバージョンは通知でお知らせします。<b>自動的に更新する</b>にチェックすると、操作は不要です。</li>
+        <li>アンインストール：時計の横の隠れたアイコン、TaskbarNest を右クリック、<b>TaskbarNest をアンインストール…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>TaskbarNest が Windows で変更する設定</h2>
+  <p><b>設定 &gt; システム &gt; マルチタスク &gt; デスクトップ</b>：</p>
+  <ul class="liste">
+    <li><b>タスクバー</b>：すべての仮想デスクトップのウィンドウを表示します。</li>
+    <li><b>Alt+Tab</b>：現在のデスクトップのウィンドウだけを表示します（Windows の通常の設定）。</li>
+    <li><b>2 つ目の仮想デスクトップ</b>：1 つしかない場合に作成されます。TaskbarNest の見えないウィンドウを置くためです。</li>
+    <li><b>エクスプローラー</b>：設定を適用するため一度再起動することがあります。タスクバーが数秒間消えます。</li>
+  </ul>
+  <p><b>デスクトップを 1 つだけ使う場合</b>、<kbd>Win</kbd> + <kbd>Tab</kbd> に空の 2 つ目のデスクトップが表示される以外、違いはありません。</p>
+  <p><b>複数使う場合</b>、すべてのデスクトップのウィンドウがタスクバーに表示されます。</p>
+  <p>アンインストールすると元の設定に戻ります。</p>
+  <p class="doux">フォルダーと設定は PC 内に保存されます。TaskbarNest は更新の確認のためにのみ GitHub に接続します。</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos。無料ソフト。 <a href="/mentions-legales.html">法的事項（フランス語）</a> · <a href="/confidentialite.html">プライバシー（フランス語）</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>寄付する</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>バージョン</dt><dd>${l.version}</dd><dt>更新日</dt><dd>${dateFr(l.maj)}</dd><dt>公開日</dt><dd>${dateFr(l.sortie)}</dd><dt>言語</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "ダウンロード"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

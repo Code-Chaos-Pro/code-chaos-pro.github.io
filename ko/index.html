@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code &amp; Chaos</title>
+<meta name="description" content="Windows용 무료 소프트웨어.">
+<link rel="canonical" href="https://codechaoslab.com/ko/">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="페이지"><a href="index.html" aria-current="page">소프트웨어</a><a href="contact.html?type=demande">요청 보내기</a><a href="contact.html?type=signalement">문제 신고</a><a href="apropos.html">소개</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>Windows용 무료 소프트웨어</h1>
+  <p class="doux">소프트웨어를 선택하면 다운로드하고 사용법을 볼 수 있습니다.</p>
+  <div class="logiciels" id="logiciels"></div>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. 무료 소프트웨어. <a href="/mentions-legales.html">법적 고지 (프랑스어)</a> · <a href="/confidentialite.html">개인정보 (프랑스어)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>후원하기</a>
+</div></footer>
+<script>
+document.getElementById('logiciels').innerHTML = LOGICIELS.map(l => `<a class="logiciel" href="${l.page}">
+  <img src="${l.icone}" alt="" width="88" height="88"><strong>${l.nom}</strong><span class="doux">버전 ${l.version}</span>
+  <dl class="fiche"><dt>업데이트</dt><dd>${dateFr(l.maj)}</dd><dt>출시</dt><dd>${dateFr(l.sortie)}</dd></dl></a>`).join('');
+</script>
+</body>
+</html>

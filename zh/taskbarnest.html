@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Windows 11 任务栏中的应用文件夹。">
+<link rel="canonical" href="https://codechaoslab.com/zh/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="页面"><a href="index.html">软件</a><a href="contact.html?type=demande">提出建议</a><a href="contact.html?type=signalement">报告问题</a><a href="apropos.html">关于</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>创作</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="打开或关闭示例文件夹"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>直接在 Windows 11 任务栏中用文件夹整理应用。</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">即将推出</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">免费。Windows 11，64 位。无需帐户，无需管理员权限。</p>
+  </div>
+</section>
+
+<section>
+  <h2>如何使用 TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>安装</h3>
+      <p>打开下载的文件，选择主题，然后单击<b>安装</b>。</p>
+      <p>TaskbarNest 没有付费签名，因此 Windows 可能会显示“Windows 已保护你的电脑”：单击<b>更多信息</b>，然后单击<b>仍要运行</b>。</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="TaskbarNest 安装窗口：两个复选框（“开始”菜单和桌面快捷方式）以及主题选择。" loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="TaskbarNest 安装窗口：两个复选框（“开始”菜单和桌面快捷方式）以及主题选择。" loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>添加应用</h3>
+      <ul>
+        <li>将任务栏图标拖到文件夹上方，然后放到<b>拖放到此处</b>气泡中。</li>
+        <li>桌面快捷方式可直接拖放到文件夹上。</li>
+        <li>将一个应用放到另一个上方，即可创建包含两者的文件夹。</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="应用被拖到文件夹上方的“拖放到此处”气泡。"><span class="tuile c5 prise"></span><div class="bulle">拖放到此处</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>打开应用</h3>
+      <p>将鼠标移到文件夹上，然后单击应用。</p>
+      <p>文件夹中的应用打开后不会在任务栏增加按钮：其图标下方会出现蓝线。单击它即可调出窗口。可在设置中关闭。</p>
+    </div><div class="scene" role="img" aria-label="打开的文件夹菜单，已打开的应用下方有蓝线。"><div class="menu"><b>创作</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>创建、移动和删除文件夹</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + 右键单击任务栏空白处，或右键单击文件夹：<b>创建文件夹</b>。</li>
+        <li>在文件夹上按住左键，即可在任务栏中移动它。</li>
+        <li>右键单击文件夹：重命名或删除。你的应用绝不会被卸载。</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>自定义</h3>
+      <ul>
+        <li>单击文件夹名称可更改名称，单击旁边的小方块可选择颜色。</li>
+        <li>右键单击，<b>自定义文件夹</b>：网格或列表，显示或隐藏应用名称。</li>
+        <li><b>TaskbarNest 设置</b>：浅色或深色主题、透明度、13 种语言。</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="文件夹颜色窗口：取色器、十六进制代码和预设颜色。" loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="文件夹颜色窗口：取色器、十六进制代码和预设颜色。" loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>右键单击文件夹中的应用</h3>
+      <ul>
+        <li>右键单击：打开、以管理员身份运行、打开文件位置、固定到“开始”、属性、从文件夹移除。</li>
+        <li><kbd>Shift</kbd> + 右键单击：完整的 Windows 菜单。</li>
+        <li>在菜单中拖动应用可更改顺序，拖出菜单可将其移出文件夹。</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="应用菜单：打开、以管理员身份运行、打开位置、固定到“开始”、属性、从文件夹移除。" loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="应用菜单：打开、以管理员身份运行、打开位置、固定到“开始”、属性、从文件夹移除。" loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>备份、更新、卸载</h3>
+      <ul>
+        <li><b>TaskbarNest 设置</b>：将文件夹导出到文件，并在另一台电脑上导入。</li>
+        <li>新版本会通过通知告知。勾选<b>自动更新</b>即可无需任何操作。</li>
+        <li>卸载：时钟旁的隐藏图标，右键单击 TaskbarNest，<b>卸载 TaskbarNest…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>TaskbarNest 对 Windows 的更改</h2>
+  <p>在<b>设置 &gt; 系统 &gt; 多任务处理 &gt; 桌面</b>中：</p>
+  <ul class="liste">
+    <li><b>任务栏</b>：显示所有虚拟桌面的窗口。</li>
+    <li><b>Alt+Tab</b>：仅显示当前桌面的窗口（Windows 的默认设置）。</li>
+    <li><b>第二个虚拟桌面</b>：如果只有一个桌面则会创建。TaskbarNest 将其不可见窗口放在那里。</li>
+    <li><b>资源管理器</b>：可能会重启一次以应用这些设置。任务栏会消失几秒钟。</li>
+  </ul>
+  <p><b>如果只使用一个桌面</b>，除了 <kbd>Win</kbd> + <kbd>Tab</kbd> 中多出的空白第二桌面外，不会有任何区别。</p>
+  <p><b>如果使用多个桌面</b>，所有桌面的窗口都会显示在任务栏中。</p>
+  <p>卸载时会恢复你原来的设置。</p>
+  <p class="doux">你的文件夹和设置保留在电脑上。TaskbarNest 仅连接 GitHub 以检查更新。</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos。免费软件。 <a href="/mentions-legales.html">法律声明（法语）</a> · <a href="/confidentialite.html">隐私（法语）</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>捐赠</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>版本</dt><dd>${l.version}</dd><dt>更新</dt><dd>${dateFr(l.maj)}</dd><dt>发布</dt><dd>${dateFr(l.sortie)}</dd><dt>语言</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "下载"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

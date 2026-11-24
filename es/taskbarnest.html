@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Carpetas de aplicaciones en la barra de tareas de Windows 11.">
+<link rel="canonical" href="https://codechaoslab.com/es/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Páginas"><a href="index.html">Programas</a><a href="contact.html?type=demande">Hacer una petición</a><a href="contact.html?type=signalement">Informar de un problema</a><a href="apropos.html">Acerca de</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Creación</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Abrir o cerrar la carpeta de ejemplo"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Organiza tus aplicaciones en carpetas, directamente en la barra de tareas de Windows 11.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Disponible pronto</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Gratis. Windows 11, 64 bits. Sin cuenta ni permisos de administrador.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Cómo usar TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Instalar</h3>
+      <p>Abre el archivo descargado, elige el tema y haz clic en <b>Instalar</b>.</p>
+      <p>TaskbarNest no tiene firma de pago, por lo que Windows puede mostrar «Windows protegió su PC»: haz clic en <b>Más información</b> y después en <b>Ejecutar de todas formas</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="Ventana de instalación de TaskbarNest, con dos casillas (menú Inicio y acceso directo en el escritorio) y la elección del tema." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="Ventana de instalación de TaskbarNest, con dos casillas (menú Inicio y acceso directo en el escritorio) y la elección del tema." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Añadir aplicaciones</h3>
+      <ul>
+        <li>Arrastra un icono de la barra de tareas por encima de la carpeta y suéltalo en la burbuja <b>Soltar aquí</b>.</li>
+        <li>Un acceso directo del escritorio se suelta directamente en la carpeta.</li>
+        <li>Suelta una aplicación sobre otra para crear una carpeta con las dos.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="Una aplicación arrastrada a la burbuja «Soltar aquí», sobre la carpeta."><span class="tuile c5 prise"></span><div class="bulle">Soltar aquí</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Abrir una aplicación</h3>
+      <p>Pasa el ratón por la carpeta y haz clic en la aplicación.</p>
+      <p>Una aplicación guardada y abierta no añade un botón a la barra: aparece una línea azul bajo su icono. Haz clic en ella para traer su ventana. Se puede desactivar en la configuración.</p>
+    </div><div class="scene" role="img" aria-label="El menú de una carpeta abierta, con una línea azul bajo una aplicación abierta."><div class="menu"><b>Creación</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Crear, mover y eliminar carpetas</h3>
+      <ul>
+        <li><kbd>Mayús</kbd> + clic derecho en una zona vacía de la barra, o clic derecho en una carpeta: <b>Crear una carpeta</b>.</li>
+        <li>Mantén el clic izquierdo en una carpeta para moverla por la barra.</li>
+        <li>Clic derecho en una carpeta: cambiar el nombre o eliminar. Tus aplicaciones nunca se desinstalan.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Personalizar</h3>
+      <ul>
+        <li>Haz clic en el nombre de la carpeta para cambiarlo y en el cuadradito de al lado para elegir su color.</li>
+        <li>Clic derecho, <b>Personalización de la carpeta</b>: cuadrícula o lista, con o sin el nombre de las aplicaciones.</li>
+        <li><b>Configuración de TaskbarNest</b>: tema claro u oscuro, transparencia, 13 idiomas.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Ventana de color de una carpeta: selector, código hexadecimal y colores predefinidos." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Ventana de color de una carpeta: selector, código hexadecimal y colores predefinidos." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Clic derecho en una aplicación de la carpeta</h3>
+      <ul>
+        <li>Clic derecho: abrir, ejecutar como administrador, abrir la ubicación del archivo, anclar a Inicio, propiedades, quitar de la carpeta.</li>
+        <li><kbd>Mayús</kbd> + clic derecho: el menú completo de Windows.</li>
+        <li>Arrastra una aplicación dentro del menú para cambiar el orden, o fuera del menú para sacarla de la carpeta.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="Menú de una aplicación: abrir, ejecutar como administrador, abrir la ubicación, anclar a Inicio, propiedades, quitar de la carpeta." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="Menú de una aplicación: abrir, ejecutar como administrador, abrir la ubicación, anclar a Inicio, propiedades, quitar de la carpeta." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Guardar, actualizar, desinstalar</h3>
+      <ul>
+        <li><b>Configuración de TaskbarNest</b>: exporta tus carpetas a un archivo e impórtalas en otro PC.</li>
+        <li>Una notificación anuncia las nuevas versiones. Marca <b>Actualizar automáticamente</b> para no tener que hacer nada.</li>
+        <li>Para desinstalar: iconos ocultos junto al reloj, clic derecho en TaskbarNest, <b>Desinstalar TaskbarNest…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>Qué cambia TaskbarNest en Windows</h2>
+  <p>En <b>Configuración &gt; Sistema &gt; Multitarea &gt; Escritorios</b>:</p>
+  <ul class="liste">
+    <li><b>Barra de tareas</b>: muestra las ventanas de todos los escritorios virtuales.</li>
+    <li><b>Alt+Tab</b>: solo muestra las ventanas del escritorio actual (el ajuste habitual de Windows).</li>
+    <li><b>Segundo escritorio virtual</b>: se crea si solo hay uno. TaskbarNest guarda allí sus ventanas invisibles.</li>
+    <li><b>Explorador</b>: puede reiniciarse una vez para aplicar estos ajustes. La barra desaparece unos segundos.</li>
+  </ul>
+  <p><b>Si solo usas un escritorio</b>, no verás diferencia, salvo este segundo escritorio vacío en <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>Si usas varios</b>, las ventanas de todos tus escritorios estarán en la barra de tareas.</p>
+  <p>La desinstalación restaura tus ajustes originales.</p>
+  <p class="doux">Tus carpetas y ajustes se quedan en tu PC. TaskbarNest solo contacta con GitHub para buscar actualizaciones.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Programas gratuitos. <a href="/mentions-legales.html">Aviso legal (en francés)</a> · <a href="/confidentialite.html">Privacidad (en francés)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Hacer una donación</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Versión</dt><dd>${l.version}</dd><dt>Actualizado</dt><dd>${dateFr(l.maj)}</dd><dt>Publicado</dt><dd>${dateFr(l.sortie)}</dd><dt>Idiomas</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Descargar"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>

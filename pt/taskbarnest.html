@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskbarNest</title>
+<meta name="description" content="Pastas de aplicações na barra de tarefas do Windows 11.">
+<link rel="canonical" href="https://codechaoslab.com/pt/taskbarnest.html">
+<link rel="icon" href="/images/taskbarnest.png">
+<link rel="stylesheet" href="/style.css?7">
+<script src="logiciels.js?7"></script>
+<script src="compte.js?1"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="index.html">Code &amp; Chaos</a>
+  <nav aria-label="Páginas"><a href="index.html">Programas</a><a href="contact.html?type=demande">Fazer um pedido</a><a href="contact.html?type=signalement">Comunicar um problema</a><a href="apropos.html">Acerca de</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="haut">
+  <div class="scene" id="scene"><div class="menu"><b>Criação</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Abrir ou fechar a pasta de exemplo"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
+  <div class="infos">
+    <img src="/images/taskbarnest.png" alt="" width="72" height="72">
+    <h1>TaskbarNest</h1>
+    <p>Organize as suas aplicações em pastas, diretamente na barra de tarefas do Windows 11.</p>
+    <a class="bouton" id="telecharger" aria-disabled="true">Disponível em breve</a>
+    <dl class="fiche" id="fiche"></dl>
+    <p class="doux">Gratuito. Windows 11, 64 bits. Sem conta e sem direitos de administrador.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Como usar o TaskbarNest</h2>
+  <div class="etapes">
+    <div class="etape"><div>
+      <h3>Instalar</h3>
+      <p>Abra o ficheiro transferido, escolha o tema e clique em <b>Instalar</b>.</p>
+      <p>O TaskbarNest não tem assinatura paga, por isso o Windows pode mostrar «O Windows protegeu o seu PC»: clique em <b>Mais informações</b> e depois em <b>Executar mesmo assim</b>.</p>
+    </div><img class="vue si-clair" src="/images/installation-clair.png" width="700" height="470" alt="Janela de instalação do TaskbarNest, com duas caixas (menu Iniciar e atalho no ambiente de trabalho) e a escolha do tema." loading="lazy"><img class="vue si-sombre" src="/images/installation.png" width="700" height="470" alt="Janela de instalação do TaskbarNest, com duas caixas (menu Iniciar e atalho no ambiente de trabalho) e a escolha do tema." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Adicionar aplicações</h3>
+      <ul>
+        <li>Arraste um ícone da barra de tarefas para cima da pasta e largue-o no balão <b>Largar aqui</b>.</li>
+        <li>Um atalho do ambiente de trabalho larga-se diretamente na pasta.</li>
+        <li>Largue uma aplicação sobre outra para criar uma pasta com as duas.</li>
+      </ul>
+    </div><div class="scene" role="img" aria-label="Uma aplicação arrastada para o balão «Largar aqui», por cima da pasta."><span class="tuile c5 prise"></span><div class="bulle">Largar aqui</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape"><div>
+      <h3>Abrir uma aplicação</h3>
+      <p>Passe o rato sobre a pasta e clique na aplicação.</p>
+      <p>Uma aplicação guardada e aberta não acrescenta um botão à barra: aparece um traço azul sob o ícone. Clique nele para trazer a janela. Pode desativar isto nas definições.</p>
+    </div><div class="scene" role="img" aria-label="O menu de uma pasta aberta, com um traço azul sob uma aplicação aberta."><div class="menu"><b>Criação</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    <div class="etape seule"><div>
+      <h3>Criar, mover e eliminar pastas</h3>
+      <ul>
+        <li><kbd>Shift</kbd> + clique direito numa zona vazia da barra, ou clique direito numa pasta: <b>Criar uma pasta</b>.</li>
+        <li>Mantenha o clique esquerdo numa pasta para a mover na barra.</li>
+        <li>Clique direito numa pasta: mudar o nome ou eliminar. As suas aplicações nunca são desinstaladas.</li>
+      </ul>
+    </div></div>
+    <div class="etape"><div>
+      <h3>Personalizar</h3>
+      <ul>
+        <li>Clique no nome da pasta para o mudar e no pequeno quadrado ao lado para escolher a cor.</li>
+        <li>Clique direito, <b>Personalização da pasta</b>: grelha ou lista, com ou sem o nome das aplicações.</li>
+        <li><b>Definições do TaskbarNest</b>: tema claro ou escuro, transparência, 13 idiomas.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/couleur-clair.png" width="400" height="347" alt="Janela de cor de uma pasta: seletor, código hexadecimal e cores predefinidas." loading="lazy"><img class="vue si-sombre" src="/images/couleur.png" width="400" height="347" alt="Janela de cor de uma pasta: seletor, código hexadecimal e cores predefinidas." loading="lazy"></div>
+    <div class="etape"><div>
+      <h3>Clique direito numa aplicação da pasta</h3>
+      <ul>
+        <li>Clique direito: abrir, executar como administrador, abrir a localização do ficheiro, afixar em Iniciar, propriedades, remover da pasta.</li>
+        <li><kbd>Shift</kbd> + clique direito: o menu completo do Windows.</li>
+        <li>Arraste uma aplicação no menu para mudar a ordem, ou para fora do menu para a tirar da pasta.</li>
+      </ul>
+    </div><img class="vue si-clair" src="/images/menu-appli-clair.png" width="247" height="206" alt="Menu de uma aplicação: abrir, executar como administrador, abrir a localização, afixar em Iniciar, propriedades, remover da pasta." loading="lazy"><img class="vue si-sombre" src="/images/menu-appli.png" width="247" height="206" alt="Menu de uma aplicação: abrir, executar como administrador, abrir a localização, afixar em Iniciar, propriedades, remover da pasta." loading="lazy"></div>
+    <div class="etape seule"><div>
+      <h3>Guardar, atualizar, desinstalar</h3>
+      <ul>
+        <li><b>Definições do TaskbarNest</b>: exporte as suas pastas para um ficheiro e importe-as noutro PC.</li>
+        <li>Uma notificação anuncia as novas versões. Assinale <b>Atualizar automaticamente</b> para não ter de fazer nada.</li>
+        <li>Para desinstalar: ícones ocultos junto ao relógio, clique direito em TaskbarNest, <b>Desinstalar o TaskbarNest…</b></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<section class="encart">
+  <h2>O que o TaskbarNest muda no Windows</h2>
+  <p>Em <b>Definições &gt; Sistema &gt; Multitarefas &gt; Ambientes de trabalho</b>:</p>
+  <ul class="liste">
+    <li><b>Barra de tarefas</b>: mostra as janelas de todos os ambientes de trabalho virtuais.</li>
+    <li><b>Alt+Tab</b>: mostra apenas as janelas do ambiente de trabalho atual (a definição habitual do Windows).</li>
+    <li><b>Segundo ambiente de trabalho virtual</b>: é criado se só houver um. O TaskbarNest guarda lá as suas janelas invisíveis.</li>
+    <li><b>Explorador</b>: pode reiniciar uma vez para aplicar estas definições. A barra desaparece alguns segundos.</li>
+  </ul>
+  <p><b>Se só usa um ambiente de trabalho</b>, não verá diferença, exceto este segundo, vazio, em <kbd>Win</kbd> + <kbd>Tab</kbd>.</p>
+  <p><b>Se usa vários</b>, as janelas de todos estarão na barra de tarefas.</p>
+  <p>A desinstalação repõe as suas definições originais.</p>
+  <p class="doux">As suas pastas e definições ficam no seu PC. O TaskbarNest só contacta o GitHub para procurar atualizações.</p>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Programas gratuitos. <a href="/mentions-legales.html">Aviso legal (em francês)</a> · <a href="/confidentialite.html">Privacidade (em francês)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Fazer um donativo</a>
+</div></footer>
+<script>
+const l = LOGICIELS.find(x => x.id === 'taskbarnest');
+document.getElementById('fiche').innerHTML = `<dt>Versão</dt><dd>${l.version}</dd><dt>Atualizado</dt><dd>${dateFr(l.maj)}</dd><dt>Lançado</dt><dd>${dateFr(l.sortie)}</dd><dt>Idiomas</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Transferir"; b.removeAttribute('aria-disabled'); }
+// Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
+const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
+dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
+dossier.addEventListener('mouseenter', () => scene.classList.remove('fermee'));
+</script>
+</body>
+</html>
