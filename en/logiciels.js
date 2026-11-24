@@ -1,7 +1,8 @@
 // Un bloc par logiciel. À mettre à jour à chaque publication (dates : « 2026-12-01 » ; vide = « Bientôt »).
 const LOGICIELS = [
   { id: 'taskbarnest', nom: 'TaskbarNest', page: 'taskbarnest.html', icone: '/images/taskbarnest.png',
-    version: '1.0.0', sortie: '', maj: '', telechargement: '' },
+    version: '1.0.0', sortie: '2026-11-24', maj: '2026-11-24',
+    telechargement: 'https://github.com/Code-Chaos-Pro/TaskbarNest/releases/download/v1.0.0/TaskbarNest-Setup-v1.0.0.exe' },
 ];
 const dateFr = d => d ? new Date(d + 'T12:00').toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'long', year: 'numeric' }) : "Soon";
 
