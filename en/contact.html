@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact us</title>
+<title>Open a ticket</title>
 <meta name="description" content="Make a request or report a problem.">
 <link rel="canonical" href="https://codechaoslab.com/en/contact.html">
-<link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?9">
-<script src="logiciels.js?8"></script>
-<script src="compte.js?1"></script>
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?12">
+<script src="logiciels.js?10"></script>
+<script src="compte.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="Pages"><a href="./">Software</a><a href="contact.html?type=demande">Make a request</a><a href="contact.html?type=signalement">Report a problem</a><a href="apropos.html">About</a></nav>
+  <nav aria-label="Pages"><a href="./">Software</a><a href="contact.html">Open a ticket</a><a href="tickets.html" id="mes-tickets" hidden>My tickets</a><a href="apropos.html">About</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
 <section class="intro">
-  <h1 id="titre">Make a request</h1>
+  <h1>Open a ticket</h1>
   <p id="etat" role="status">Loading…</p>
   <noscript><p>Write to <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
 </section>
@@ -33,7 +33,7 @@
   <label class="champ" for="logiciel">Software <select id="logiciel"></select></label>
   <label class="champ" for="sujet">Subject <select id="sujet"></select></label>
   <label class="champ" for="texte">Description <textarea id="texte" maxlength="4000" required></textarea></label>
-  <label class="champ" for="images">Images (optional, 5 at most) <input type="file" id="images" accept="image/*" multiple></label>
+  <label class="champ" for="images">Images (optional, 1 or more) <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
   <p class="doux">Your message is only used to reply to you. <a href="/confidentialite.html">Privacy (French)</a></p>
   <div><button class="bouton" id="envoyer">Send</button></div>
@@ -45,10 +45,6 @@
   <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Make a donation</a>
 </div></footer>
 <script>
-const SUJETS = {
-  demande: [['fonction', "New feature"], ['amelioration', "Improve a feature"], ['langue', "New language"], ['autre', "Other"]],
-  signalement: [['dossier', "A folder does not show up"], ['ouverture', "An app does not open"], ['glisser', "Drag and drop"], ['barre', "Taskbar slow or frozen"], ['affichage', "Display or text"], ['traduction', "Translation"], ['installation', "Installation or update"], ['desinstallation', "Uninstallation"], ['autre', "Other"]],
-};
 const $ = id => document.getElementById(id), args = new URLSearchParams(location.search);
 const options = (id, liste) => $(id).replaceChildren(...liste.map(([v, t]) => new Option(t, v)));
 options('logiciel', LOGICIELS.map(l => [l.id, l.nom]).concat([['autre', "Other"]]));
@@ -56,13 +52,12 @@ if (LOGICIELS.some(l => l.id === args.get('logiciel'))) $('logiciel').value = ar
 if (args.get('type') === 'signalement') $('t-signalement').checked = true;
 function choisir() {
   const type = $('t-signalement').checked ? 'signalement' : 'demande';
-  $('titre').textContent = document.title = type === 'demande' ? "Make a request" : "Report a problem";
   options('sujet', SUJETS[type]);
 }
 $('t-demande').onchange = $('t-signalement').onchange = choisir; choisir();
 $('images').onchange = e => {
   $('apercus').querySelectorAll('img').forEach(i => URL.revokeObjectURL(i.src));
-  $('apercus').replaceChildren(...[...e.target.files].slice(0, 5).map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
+  $('apercus').replaceChildren(...[...e.target.files].map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
 };
 
 const dire = (texte, secours) => ecrire($('etat'), texte, secours);
@@ -80,18 +75,19 @@ async function reduire(fichier) {
 $('formulaire').onsubmit = async e => {
   e.preventDefault();
   if (!$('texte').value.trim()) return dire("Write a description.");
+  if ($('images').files.length > 5) return dire("5 images at most per ticket. Remove some and try again.");
   $('envoyer').disabled = true;
   dire("Sending…");
   try {
     const images = [];
-    for (const f of [...$('images').files].slice(0, 5)) {
+    for (const f of $('images').files) {
       const chemin = `${session.id}/${crypto.randomUUID()}.jpg`;
       await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
       images.push(chemin);
     }
     await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
     $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
-    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false;
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; voirTickets();
     return dire('');
   } catch (x) {
     if (x.code === 401) { session = null; garder('session'); dire("Your session has expired. Copy your text, then reload the page."); }

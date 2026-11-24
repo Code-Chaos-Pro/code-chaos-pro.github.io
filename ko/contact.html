@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>문의하기</title>
+<title>티켓 만들기</title>
 <meta name="description" content="요청을 보내거나 문제를 신고하세요.">
 <link rel="canonical" href="https://codechaoslab.com/ko/contact.html">
-<link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?9">
-<script src="logiciels.js?8"></script>
-<script src="compte.js?1"></script>
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?12">
+<script src="logiciels.js?10"></script>
+<script src="compte.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="페이지"><a href="./">소프트웨어</a><a href="contact.html?type=demande">요청 보내기</a><a href="contact.html?type=signalement">문제 신고</a><a href="apropos.html">소개</a></nav>
+  <nav aria-label="페이지"><a href="./">소프트웨어</a><a href="contact.html">티켓 만들기</a><a href="tickets.html" id="mes-tickets" hidden>내 티켓</a><a href="apropos.html">소개</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
 <section class="intro">
-  <h1 id="titre">요청 보내기</h1>
+  <h1>티켓 만들기</h1>
   <p id="etat" role="status">불러오는 중…</p>
   <noscript><p>다음으로 보내 주세요: <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
 </section>
@@ -33,7 +33,7 @@
   <label class="champ" for="logiciel">소프트웨어 <select id="logiciel"></select></label>
   <label class="champ" for="sujet">주제 <select id="sujet"></select></label>
   <label class="champ" for="texte">설명 <textarea id="texte" maxlength="4000" required></textarea></label>
-  <label class="champ" for="images">이미지 (선택, 최대 5개) <input type="file" id="images" accept="image/*" multiple></label>
+  <label class="champ" for="images">이미지 (선택, 1개 이상) <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
   <p class="doux">메시지는 답변을 위해서만 사용됩니다. <a href="/confidentialite.html">개인정보 (프랑스어)</a></p>
   <div><button class="bouton" id="envoyer">보내기</button></div>
@@ -45,10 +45,6 @@
   <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>후원하기</a>
 </div></footer>
 <script>
-const SUJETS = {
-  demande: [['fonction', "새 기능"], ['amelioration', "기능 개선"], ['langue', "새 언어"], ['autre', "기타"]],
-  signalement: [['dossier', "폴더가 표시되지 않음"], ['ouverture', "앱이 열리지 않음"], ['glisser', "끌어서 놓기"], ['barre', "작업 표시줄이 느리거나 멈춤"], ['affichage', "화면 또는 텍스트"], ['traduction', "번역"], ['installation', "설치 또는 업데이트"], ['desinstallation', "제거"], ['autre', "기타"]],
-};
 const $ = id => document.getElementById(id), args = new URLSearchParams(location.search);
 const options = (id, liste) => $(id).replaceChildren(...liste.map(([v, t]) => new Option(t, v)));
 options('logiciel', LOGICIELS.map(l => [l.id, l.nom]).concat([['autre', "기타"]]));
@@ -56,13 +52,12 @@ if (LOGICIELS.some(l => l.id === args.get('logiciel'))) $('logiciel').value = ar
 if (args.get('type') === 'signalement') $('t-signalement').checked = true;
 function choisir() {
   const type = $('t-signalement').checked ? 'signalement' : 'demande';
-  $('titre').textContent = document.title = type === 'demande' ? "요청 보내기" : "문제 신고";
   options('sujet', SUJETS[type]);
 }
 $('t-demande').onchange = $('t-signalement').onchange = choisir; choisir();
 $('images').onchange = e => {
   $('apercus').querySelectorAll('img').forEach(i => URL.revokeObjectURL(i.src));
-  $('apercus').replaceChildren(...[...e.target.files].slice(0, 5).map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
+  $('apercus').replaceChildren(...[...e.target.files].map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
 };
 
 const dire = (texte, secours) => ecrire($('etat'), texte, secours);
@@ -80,18 +75,19 @@ async function reduire(fichier) {
 $('formulaire').onsubmit = async e => {
   e.preventDefault();
   if (!$('texte').value.trim()) return dire("설명을 입력하세요.");
+  if ($('images').files.length > 5) return dire("티켓당 이미지는 최대 5개입니다. 일부를 제거하고 다시 시도하세요.");
   $('envoyer').disabled = true;
   dire("보내는 중…");
   try {
     const images = [];
-    for (const f of [...$('images').files].slice(0, 5)) {
+    for (const f of $('images').files) {
       const chemin = `${session.id}/${crypto.randomUUID()}.jpg`;
       await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
       images.push(chemin);
     }
     await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
     $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
-    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false;
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; voirTickets();
     return dire('');
   } catch (x) {
     if (x.code === 401) { session = null; garder('session'); dire("세션이 만료되었습니다. 글을 복사한 다음 페이지를 새로 고치세요."); }

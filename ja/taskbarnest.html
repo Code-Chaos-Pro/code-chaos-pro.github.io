@@ -7,14 +7,14 @@
 <meta name="description" content="Windows 11 のタスクバーにアプリのフォルダーを。">
 <link rel="canonical" href="https://codechaoslab.com/ja/taskbarnest.html">
 <link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?7">
-<script src="logiciels.js?8"></script>
-<script src="compte.js?1"></script>
+<link rel="stylesheet" href="/style.css?12">
+<script src="logiciels.js?10"></script>
+<script src="compte.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="ページ"><a href="./">ソフト</a><a href="contact.html?type=demande">要望を送る</a><a href="contact.html?type=signalement">問題を報告</a><a href="apropos.html">このサイトについて</a></nav>
+  <nav aria-label="ページ"><a href="./">ソフト</a><a href="contact.html">チケットを作成</a><a href="tickets.html" id="mes-tickets" hidden>マイチケット</a><a href="apropos.html">このサイトについて</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
@@ -24,7 +24,7 @@
     <img src="/images/taskbarnest.png" alt="" width="72" height="72">
     <h1>TaskbarNest</h1>
     <p>Windows 11 のタスクバーで、アプリをフォルダーにまとめられます。</p>
-    <a class="bouton" id="telecharger" aria-disabled="true">近日公開</a>
+    <a class="bouton" id="telecharger" aria-disabled="true">現在利用できません（メンテナンス中）</a>
     <dl class="fiche" id="fiche"></dl>
     <p class="doux">無料。Windows 11（64 ビット）。アカウントも管理者権限も不要です。</p>
   </div>
@@ -41,11 +41,11 @@
     <div class="etape"><div>
       <h3>アプリを追加する</h3>
       <ul>
-        <li>タスクバーのアイコンをフォルダーの上へドラッグし、<b>ここにドロップ</b>の吹き出しに放します。</li>
+        <li>タスクバーのアイコンをフォルダーの上へドラッグし、<b>+</b>の吹き出しに放します。</li>
         <li>デスクトップのショートカットは、フォルダーに直接ドロップできます。</li>
         <li>アプリを別のアプリの上で放すと、両方が入ったフォルダーが作られます。</li>
       </ul>
-    </div><div class="scene" role="img" aria-label="フォルダーの上の「ここにドロップ」へドラッグされるアプリ。"><span class="tuile c5 prise"></span><div class="bulle">ここにドロップ</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    </div><div class="scene" role="img" aria-label="フォルダーの上の「+」へドラッグされるアプリ。"><span class="tuile c5 prise"></span><div class="bulle">+</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
     <div class="etape"><div>
       <h3>アプリを開く</h3>
       <p>フォルダーにマウスを重ね、アプリをクリックします。</p>

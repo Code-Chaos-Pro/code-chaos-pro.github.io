@@ -7,14 +7,14 @@
 <meta name="description" content="Windows 11 görev çubuğunda uygulama klasörleri.">
 <link rel="canonical" href="https://codechaoslab.com/tr/taskbarnest.html">
 <link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?7">
-<script src="logiciels.js?8"></script>
-<script src="compte.js?1"></script>
+<link rel="stylesheet" href="/style.css?12">
+<script src="logiciels.js?10"></script>
+<script src="compte.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="Sayfalar"><a href="./">Yazılımlar</a><a href="contact.html?type=demande">İstek gönder</a><a href="contact.html?type=signalement">Sorun bildir</a><a href="apropos.html">Hakkında</a></nav>
+  <nav aria-label="Sayfalar"><a href="./">Yazılımlar</a><a href="contact.html">Talep oluştur</a><a href="tickets.html" id="mes-tickets" hidden>Taleplerim</a><a href="apropos.html">Hakkında</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
@@ -24,7 +24,7 @@
     <img src="/images/taskbarnest.png" alt="" width="72" height="72">
     <h1>TaskbarNest</h1>
     <p>Uygulamalarınızı doğrudan Windows 11 görev çubuğunda klasörlere yerleştirin.</p>
-    <a class="bouton" id="telecharger" aria-disabled="true">Yakında</a>
+    <a class="bouton" id="telecharger" aria-disabled="true">Şu anda kullanılamıyor (bakım)</a>
     <dl class="fiche" id="fiche"></dl>
     <p class="doux">Ücretsiz. Windows 11, 64 bit. Hesap ve yönetici hakkı gerekmez.</p>
   </div>
@@ -41,11 +41,11 @@
     <div class="etape"><div>
       <h3>Uygulama ekleme</h3>
       <ul>
-        <li>Görev çubuğundaki bir simgeyi klasörün üzerine sürükleyin ve <b>Buraya bırak</b> balonuna bırakın.</li>
+        <li>Görev çubuğundaki bir simgeyi klasörün üzerine sürükleyin ve <b>+</b> balonuna bırakın.</li>
         <li>Masaüstü kısayolu doğrudan klasörün üzerine bırakılır.</li>
         <li>İkisini içeren bir klasör oluşturmak için bir uygulamayı diğerinin üzerine bırakın.</li>
       </ul>
-    </div><div class="scene" role="img" aria-label="Klasörün üzerindeki “Buraya bırak” balonuna sürüklenen bir uygulama."><span class="tuile c5 prise"></span><div class="bulle">Buraya bırak</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
+    </div><div class="scene" role="img" aria-label="Klasörün üzerindeki “+” balonuna sürüklenen bir uygulama."><span class="tuile c5 prise"></span><div class="bulle">+</div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><span class="tuile dossier"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></span><span class="tuile c0"></span><span class="tuile c0"></span></div></div></div>
     <div class="etape"><div>
       <h3>Uygulama açma</h3>
       <p>Fareyi klasörün üzerine getirin ve uygulamaya tıklayın.</p>

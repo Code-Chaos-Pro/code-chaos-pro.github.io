@@ -1,9 +1,14 @@
 // Un bloc par logiciel. À mettre à jour à chaque publication (dates : « 2026-12-01 » ; vide = « Bientôt »).
 const LOGICIELS = [
   { id: 'taskbarnest', nom: 'TaskbarNest', page: 'taskbarnest.html', icone: '/images/taskbarnest.png',
-    version: '1.0.0', sortie: '2026-11-24', maj: '2026-11-24',
-    telechargement: 'https://github.com/Code-Chaos-Pro/TaskbarNest/releases/download/v1.0.0/TaskbarNest-Setup-v1.0.0.exe' },
+    version: '1.0.1', sortie: '2026-11-24', maj: '2026-11-24',
+    telechargement: 'https://github.com/Code-Chaos-Pro/TaskbarNest/releases/download/v1.0.1/TaskbarNest-Setup-v1.0.1.exe' },
 ];
+// Sujets d'un ticket : la valeur (code) est enregistrée, le libellé est affiché dans la langue de la page.
+const SUJETS = {
+  demande: [['fonction', "Neue Funktion"], ['amelioration', "Funktion verbessern"], ['langue', "Neue Sprache"], ['autre', "Sonstiges"]],
+  signalement: [['dossier', "Ein Ordner wird nicht angezeigt"], ['ouverture', "Eine App öffnet sich nicht"], ['glisser', "Ziehen und Ablegen"], ['barre', "Taskleiste langsam oder blockiert"], ['affichage', "Anzeige oder Text"], ['traduction', "Übersetzung"], ['installation', "Installation oder Update"], ['desinstallation', "Deinstallation"], ['autre', "Sonstiges"]],
+};
 const dateFr = d => d ? new Date(d + 'T12:00').toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'long', year: 'numeric' }) : "Bald";
 
 // Thème : celui de Windows, sauf si le visiteur a choisi avec l'interrupteur (gardé dans son navigateur).
@@ -25,7 +30,7 @@ function boutonTheme() {
 // Langues du site : le français à la racine, les autres dans /en/, /es/… (fabriquées par traduire-site.py).
 const LANGUES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch', it: 'Italiano', pt: 'Português', nl: 'Nederlands', pl: 'Polski', ru: 'Русский', tr: 'Türkçe', ja: '日本語', zh: '中文（简体）', ko: '한국어' };
 const page = location.pathname.split('/').pop().replace('index.html', '');
-const traduite = ['', 'taskbarnest.html', 'contact.html', 'apropos.html'].includes(page); // les autres n'existent qu'en français
+const traduite = ['', 'taskbarnest.html', 'contact.html', 'tickets.html', 'apropos.html'].includes(page); // les autres n'existent qu'en français
 const adresse = (code, p) => (code === 'fr' ? '/' : `/${code}/`) + p;
 // À la racine : langue déjà choisie, sinon celle du navigateur, sinon l'anglais. Pas pour les robots (Google doit lire le français)
 // ni depuis TaskbarNest (?logiciel=), qui ouvre déjà sa langue.

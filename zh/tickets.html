@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的工单</title>
+<meta name="description" content="你提交的工单。">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://codechaoslab.com/zh/tickets.html">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?12">
+<script src="logiciels.js?10"></script>
+<script src="compte.js?2"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="./">Code &amp; Chaos</a>
+  <nav aria-label="页面"><a href="./">软件</a><a href="contact.html">提交工单</a><a href="tickets.html" id="mes-tickets" aria-current="page">我的工单</a><a href="apropos.html">关于</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>我的工单</h1>
+  <p id="etat" role="status">正在加载…</p>
+</section>
+<div class="connexion" id="connexion"></div>
+<div class="tickets" id="tickets"></div>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos。免费软件。 <a href="/mentions-legales.html">法律声明（法语）</a> · <a href="/confidentialite.html">隐私（法语）</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>捐赠</a>
+</div></footer>
+<script>
+const $ = id => document.getElementById(id);
+const el = (balise, texte, classe) => { const e = document.createElement(balise); e.textContent = texte; if (classe) e.className = classe; return e; };
+// Images : privées, demandées avec la connexion de la personne. Affichées au clic seulement.
+async function montrerImages(zone, chemins) {
+  zone.replaceChildren();
+  for (const c of chemins) try {
+    const i = new Image(); i.src = URL.createObjectURL(await (await appel('/storage/v1/object/authenticated/messages/' + c)).blob()); i.alt = '';
+    zone.append(i);
+  } catch { zone.append(el('span', "图片不可用", 'doux')); }
+}
+function ticket(t) {
+  const a = el('article', '', 'encart'), type = t.type === 'demande' ? "建议" : "问题";
+  const sujet = (SUJETS[t.type] || []).find(([code]) => code === t.sujet)?.[1] || t.sujet;
+  const logiciel = LOGICIELS.find(l => l.id === t.logiciel)?.nom || "其他";
+  const date = new Date(t.cree).toLocaleString(racine.lang, { dateStyle: 'long', timeStyle: 'short' });
+  a.append(el('h2', sujet), el('p', `${type} · ${logiciel} · ${date}`, 'doux'), el('p', t.texte, 'message'));
+  if (t.images.length) { const z = el('div', '', 'apercus'); z.append(bouton(`${"查看图片"} (${t.images.length})`, () => montrerImages(z, t.images))); a.append(z); }
+  return a;
+}
+async function montrer() {
+  $('tickets').replaceChildren();
+  $('connexion').replaceChildren();
+  if (!session) return montrerCompte($('etat'), $('connexion'), "请登录以查看你的工单。");
+  ecrire($('etat'), "正在加载…");
+  try {
+    const liste = await (await appel('/rest/v1/messages?select=cree,type,logiciel,sujet,texte,images&order=cree.desc&limit=100')).json();
+    ecrire($('etat'), liste.length ? '' : "你还没有工单。");
+    $('tickets').replaceChildren(...liste.map(ticket));
+  } catch (x) {
+    if (x.code === 401) return changer(null); // connexion expirée : les boutons reviennent
+    ecrire($('etat'), "无法读取你的工单。", true);
+  }
+}
+document.addEventListener('compte', montrer);
+compte.then(montrer);
+</script>
+</body>
+</html>

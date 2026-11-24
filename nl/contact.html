@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact</title>
+<title>Een ticket maken</title>
 <meta name="description" content="Een verzoek doen of een probleem melden.">
 <link rel="canonical" href="https://codechaoslab.com/nl/contact.html">
-<link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?9">
-<script src="logiciels.js?8"></script>
-<script src="compte.js?1"></script>
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?12">
+<script src="logiciels.js?10"></script>
+<script src="compte.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="Pagina’s"><a href="./">Programma’s</a><a href="contact.html?type=demande">Een verzoek doen</a><a href="contact.html?type=signalement">Een probleem melden</a><a href="apropos.html">Over</a></nav>
+  <nav aria-label="Pagina’s"><a href="./">Programma’s</a><a href="contact.html">Een ticket maken</a><a href="tickets.html" id="mes-tickets" hidden>Mijn tickets</a><a href="apropos.html">Over</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
 <section class="intro">
-  <h1 id="titre">Een verzoek doen</h1>
+  <h1>Een ticket maken</h1>
   <p id="etat" role="status">Laden…</p>
   <noscript><p>Schrijf naar <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
 </section>
@@ -33,7 +33,7 @@
   <label class="champ" for="logiciel">Programma <select id="logiciel"></select></label>
   <label class="champ" for="sujet">Onderwerp <select id="sujet"></select></label>
   <label class="champ" for="texte">Beschrijving <textarea id="texte" maxlength="4000" required></textarea></label>
-  <label class="champ" for="images">Afbeeldingen (optioneel, maximaal 5) <input type="file" id="images" accept="image/*" multiple></label>
+  <label class="champ" for="images">Afbeeldingen (optioneel, 1 of meer) <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
   <p class="doux">Je bericht wordt alleen gebruikt om je te antwoorden. <a href="/confidentialite.html">Privacy (Frans)</a></p>
   <div><button class="bouton" id="envoyer">Verzenden</button></div>
@@ -45,10 +45,6 @@
   <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Doneren</a>
 </div></footer>
 <script>
-const SUJETS = {
-  demande: [['fonction', "Nieuwe functie"], ['amelioration', "Functie verbeteren"], ['langue', "Nieuwe taal"], ['autre', "Anders"]],
-  signalement: [['dossier', "Een map verschijnt niet"], ['ouverture', "Een app gaat niet open"], ['glisser', "Slepen en neerzetten"], ['barre', "Taakbalk traag of vastgelopen"], ['affichage', "Weergave of tekst"], ['traduction', "Vertaling"], ['installation', "Installatie of update"], ['desinstallation', "Verwijderen"], ['autre', "Anders"]],
-};
 const $ = id => document.getElementById(id), args = new URLSearchParams(location.search);
 const options = (id, liste) => $(id).replaceChildren(...liste.map(([v, t]) => new Option(t, v)));
 options('logiciel', LOGICIELS.map(l => [l.id, l.nom]).concat([['autre', "Anders"]]));
@@ -56,13 +52,12 @@ if (LOGICIELS.some(l => l.id === args.get('logiciel'))) $('logiciel').value = ar
 if (args.get('type') === 'signalement') $('t-signalement').checked = true;
 function choisir() {
   const type = $('t-signalement').checked ? 'signalement' : 'demande';
-  $('titre').textContent = document.title = type === 'demande' ? "Een verzoek doen" : "Een probleem melden";
   options('sujet', SUJETS[type]);
 }
 $('t-demande').onchange = $('t-signalement').onchange = choisir; choisir();
 $('images').onchange = e => {
   $('apercus').querySelectorAll('img').forEach(i => URL.revokeObjectURL(i.src));
-  $('apercus').replaceChildren(...[...e.target.files].slice(0, 5).map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
+  $('apercus').replaceChildren(...[...e.target.files].map(f => { const i = new Image(); i.src = URL.createObjectURL(f); i.alt = f.name; return i; }));
 };
 
 const dire = (texte, secours) => ecrire($('etat'), texte, secours);
@@ -80,18 +75,19 @@ async function reduire(fichier) {
 $('formulaire').onsubmit = async e => {
   e.preventDefault();
   if (!$('texte').value.trim()) return dire("Schrijf een beschrijving.");
+  if ($('images').files.length > 5) return dire("Maximaal 5 afbeeldingen per ticket. Verwijder er enkele en probeer opnieuw.");
   $('envoyer').disabled = true;
   dire("Verzenden…");
   try {
     const images = [];
-    for (const f of [...$('images').files].slice(0, 5)) {
+    for (const f of $('images').files) {
       const chemin = `${session.id}/${crypto.randomUUID()}.jpg`;
       await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
       images.push(chemin);
     }
     await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
     $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
-    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false;
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; voirTickets();
     return dire('');
   } catch (x) {
     if (x.code === 401) { session = null; garder('session'); dire("De sessie is verlopen. Kopieer je tekst en laad de pagina opnieuw."); }
