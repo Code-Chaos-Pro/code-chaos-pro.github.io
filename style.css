@@ -108,3 +108,13 @@ dialog[open] { display: grid; gap: 16px; }
 dialog::backdrop { background: #0008; }
 dialog .connexion { display: grid; }
 .fermer { justify-self: start; padding: 8px 0; border: 0; background: none; font: inherit; color: var(--doux); text-decoration: underline; cursor: pointer; }
+/* Annonce d'envoi : descend un peu depuis le haut, attend, remonte. Seul son petit contour est flou. */
+.annonce { position: fixed; left: 50%; top: 24px; z-index: 10; padding: 14px; border-radius: 28px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); pointer-events: none; animation: annonce 3.2s ease both; }
+.annonce div { display: grid; justify-items: center; gap: 14px; padding: 28px 40px; border: 1px solid var(--trait); border-radius: 18px; background: var(--surface); font: 650 1.2rem var(--titre); text-align: center; }
+.annonce svg { width: 72px; height: 72px; fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.annonce circle { fill: var(--vert); stroke: none; }
+.annonce path { stroke-dasharray: 36; animation: coche .4s .55s ease both; }
+@keyframes annonce { 0%, 100% { transform: translate(-50%, calc(-100% - 40px)); } 16%, 84% { transform: translate(-50%, 0); } }
+@keyframes coche { from { stroke-dashoffset: 36; } to { stroke-dashoffset: 0; } }
+@keyframes fondu { 0%, 100% { opacity: 0; transform: translate(-50%, 0); } 16%, 84% { opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce) { .annonce { animation-name: fondu; } .annonce path { animation: none; } }
