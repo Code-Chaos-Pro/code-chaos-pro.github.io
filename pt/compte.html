@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A minha conta</title>
+<meta name="description" content="A tua conta Code &amp; Chaos.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://codechaoslab.com/pt/compte">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?14">
+<script src="logiciels.js?12"></script>
+<script src="compte.js?4"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="./">Code &amp; Chaos</a>
+  <nav aria-label="Páginas"><a href="./">Programas</a><a href="contact">Abrir um ticket</a><a href="tickets" id="mes-tickets" hidden>Os meus tickets</a><a href="apropos">Acerca de</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>A minha conta</h1>
+  <p id="etat" role="status">A carregar…</p>
+</section>
+<div class="connexion" id="connexion"></div>
+<div class="tickets" id="mon-compte" hidden>
+<section class="encart"><h2>Perfil</h2>
+  <p class="doux">O teu nome de utilizador e o teu avatar serão visíveis junto às tuas avaliações.</p>
+  <form id="f-pseudo"><label class="champ" for="pseudo">Nome de utilizador <input id="pseudo"></label><p class="doux" id="e-pseudo" role="status"></p><div><button class="bouton">Guardar</button></div></form>
+  <h3>Avatar</h3><div class="avatars" id="avatars" role="group" aria-label="Avatar"></div>
+  <dl class="fiche" id="fiche"></dl>
+</section>
+<section class="encart"><h2>Favoritos</h2><div id="favoris"></div></section>
+<section class="encart"><h2>Histórico</h2><div id="historique"></div><div><button class="fermer" type="button" id="vider">Limpar o histórico</button></div></section>
+<section class="encart"><h2>Terminar sessão</h2><div><button class="fermer" type="button" id="sortir">Terminar sessão</button></div></section>
+<section class="encart"><h2>Eliminar a minha conta</h2><p>Esta ação é irreversível e eliminará todos os teus dados.</p><div><button class="bouton danger" type="button" id="supprimer">Eliminar a minha conta</button></div></section>
+</div>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Programas gratuitos. <a href="/mentions-legales">Aviso legal (em francês)</a> · <a href="/confidentialite">Privacidade (em francês)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Fazer um donativo</a>
+</div></footer>
+<script>
+const $ = id => document.getElementById(id);
+const texte = t => { const p = document.createElement('p'); p.className = 'doux'; p.textContent = t; return p; };
+Object.assign($('pseudo'), PSEUDO);
+async function enregistrer(champs) {
+  await appel('/rest/v1/profils?id=eq.' + session.id, champs, { Prefer: 'return=minimal' }, 'PATCH');
+  changer({ ...session, ...champs });
+}
+$('avatars').append(...AVATARS.map((_, n) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.setAttribute('aria-label', `${"Avatar"} ${n + 1}`); b.append(avatar(n));
+  b.onclick = () => enregistrer({ avatar: n }).catch(() => { $('e-pseudo').textContent = "O avatar não foi guardado. Tenta novamente."; });
+  return b;
+}));
+$('f-pseudo').onsubmit = async e => {
+  e.preventDefault();
+  try { await enregistrer({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "Nome de utilizador guardado."; }
+  catch (x) { $('e-pseudo').textContent = erreurPseudo(x); }
+};
+function montrerFavoris() { $('favoris').replaceChildren(favoris.size ? listeLogiciels([...favoris].map(f => [f])) : texte("Ainda sem favoritos. Clica na estrela de um programa.")); }
+async function montrerHistorique() {
+  let vus = [];
+  try { vus = await lireTable('historique?select=logiciel,vu&order=vu.desc'); } catch { return $('historique').replaceChildren(texte("Não é possível ler o histórico.")); }
+  $('vider').hidden = !vus.length;
+  $('historique').replaceChildren(vus.length ? listeLogiciels(vus.map(v => [v.logiciel, dateFr(v.vu)])) : texte("O teu histórico está vazio."));
+}
+$('vider').onclick = () => appel('/rest/v1/historique?compte=eq.' + session.id, undefined, {}, 'DELETE').then(montrerHistorique, () => $('historique').append(texte("O histórico não foi limpo. Tenta novamente.")));
+$('sortir').onclick = deconnecter;
+$('supprimer').onclick = () => {
+  const { d, zone } = fenetre("Eliminar a minha conta?"), p = texte("Esta ação é irreversível e eliminará todos os teus dados.");
+  const b = bouton("Eliminar", async () => {
+    b.disabled = true; p.textContent = "A eliminar…";
+    try {
+      // Images des tickets d'abord : la base ne sait pas effacer les fichiers.
+      const dossier = session.id;
+      const images = await (await appel('/storage/v1/object/list/messages', { prefix: dossier, limit: 1000 })).json();
+      if (images.length) await appel('/storage/v1/object/messages', { prefixes: images.map(i => `${dossier}/${i.name}`) }, {}, 'DELETE');
+      await appel('/rest/v1/rpc/supprimer_compte', {});
+      d.close(); changer(null);
+    } catch { b.disabled = false; ecrire(p, "A conta não foi eliminada. Tenta novamente.", true); }
+  }, 'bouton danger');
+  zone.append(p); d.lastChild.append(b);
+};
+let montre = null; // compte dont l'historique est déjà affiché
+async function montrer() {
+  $('mon-compte').hidden = !session?.pseudo;
+  $('connexion').replaceChildren();
+  if (!session?.pseudo) { montre = null; return montrerCompte($('etat'), $('connexion'), "Inicia sessão para ver a tua conta."); }
+  ecrire($('etat'), '');
+  $('pseudo').value = session.pseudo;
+  [...$('avatars').children].forEach((b, n) => b.setAttribute('aria-pressed', n === session.avatar));
+  $('fiche').replaceChildren(...[["Endereço de e-mail", session.email || "Nenhum"], ["Conta criada", dateFr(session.cree)]].flatMap(([t, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = t; dd.textContent = v; return [dt, dd]; }));
+  montrerFavoris();
+  if (montre !== session.id) { montre = session.id; montrerHistorique(); }
+}
+document.addEventListener('compte', montrer);
+document.addEventListener('favoris', montrerFavoris);
+compte.then(montrer);
+</script>
+</body>
+</html>

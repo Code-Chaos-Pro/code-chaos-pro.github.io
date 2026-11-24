@@ -1,7 +1,8 @@
-// Un bloc par logiciel. À mettre à jour à chaque publication (dates : « 2026-12-01 » ; vide = « Bientôt »).
+// Un bloc par logiciel. À mettre à jour à chaque publication (dates et heures UTC de GitHub ; vide = « Bientôt »).
 const LOGICIELS = [
-  { id: 'taskbarnest', nom: 'TaskbarNest', page: 'taskbarnest.html', icone: '/images/taskbarnest.png',
-    version: '1.0.1', sortie: '2026-11-24', maj: '2026-11-24',
+  { id: 'taskbarnest', nom: 'TaskbarNest', page: 'taskbarnest', icone: '/images/taskbarnest.png',
+    description: "Uygulamalarınızı doğrudan Windows 11 görev çubuğunda klasörlere yerleştirin.",
+    version: '1.0.1', sortie: '2026-11-24T01:59:37Z', maj: '2026-11-24T19:09:18Z',
     telechargement: 'https://github.com/Code-Chaos-Pro/TaskbarNest/releases/download/v1.0.1/TaskbarNest-Setup-v1.0.1.exe' },
 ];
 // Sujets d'un ticket : la valeur (code) est enregistrée, le libellé est affiché dans la langue de la page.
@@ -9,7 +10,11 @@ const SUJETS = {
   demande: [['fonction', "Yeni özellik"], ['amelioration', "Özelliği geliştir"], ['langue', "Yeni dil"], ['autre', "Diğer"]],
   signalement: [['dossier', "Bir klasör görünmüyor"], ['ouverture', "Bir uygulama açılmıyor"], ['glisser', "Sürükle ve bırak"], ['barre', "Görev çubuğu yavaş veya donmuş"], ['affichage', "Görünüm veya metin"], ['traduction', "Çeviri"], ['installation', "Kurulum veya güncelleme"], ['desinstallation', "Kaldırma"], ['autre', "Diğer"]],
 };
-const dateFr = d => d ? new Date(d + 'T12:00').toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'long', year: 'numeric' }) : "Yakında";
+const dateFr = d => d ? new Date(d).toLocaleString(document.documentElement.lang, { dateStyle: 'long', timeStyle: 'medium' }) : "Yakında";
+const nombre = n => new Intl.NumberFormat(document.documentElement.lang, { notation: 'compact', maximumFractionDigits: 1 }).format(n); // 1,2 k ; 3 M
+const badge = (dessin, n, texte) => `<span class="compteur"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${dessin}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>${nombre(n)}</b> ${texte}</span>`;
+const badgeVues = n => badge('M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zm7 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0', n, "Görüntülenme");
+const badgeTelechargements = n => badge('M12 3v12m-5-5 5 5 5-5M4 20h16', n, "İndirme");
 
 // Thème : celui de Windows, sauf si le visiteur a choisi avec l'interrupteur (gardé dans son navigateur).
 const racine = document.documentElement, sombreWindows = matchMedia('(prefers-color-scheme: dark)');
@@ -29,8 +34,10 @@ function boutonTheme() {
 
 // Langues du site : le français à la racine, les autres dans /en/, /es/… (fabriquées par traduire-site.py).
 const LANGUES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch', it: 'Italiano', pt: 'Português', nl: 'Nederlands', pl: 'Polski', ru: 'Русский', tr: 'Türkçe', ja: '日本語', zh: '中文（简体）', ko: '한국어' };
-const page = location.pathname.split('/').pop().replace('index.html', '');
-const traduite = ['', 'taskbarnest.html', 'contact.html', 'tickets.html', 'apropos.html'].includes(page); // les autres n'existent qu'en français
+// Adresses sans « .html » : GitHub sert /contact à partir de contact.html ; les anciens liens sont nettoyés.
+if (location.pathname.endsWith('.html')) history.replaceState(null, '', location.pathname.replace(/(index)?\.html$/, '') + location.search + location.hash);
+const page = location.pathname.split('/').pop();
+const traduite = ['', 'taskbarnest', 'contact', 'tickets', 'apropos', 'compte'].includes(page); // les autres n'existent qu'en français
 const adresse = (code, p) => (code === 'fr' ? '/' : `/${code}/`) + p;
 // À la racine : langue déjà choisie, sinon celle du navigateur, sinon l'anglais. Pas pour les robots (Google doit lire le français)
 // ni depuis TaskbarNest (?logiciel=), qui ouvre déjà sa langue.
@@ -53,6 +60,6 @@ function choixLangue() {
 function outils() {
   const d = document.createElement('div');
   d.className = 'outils';
-  d.append(choixLangue(), boutonCompte(), boutonTheme());
+  d.append(choixLangue(), boutonCompte(), boutonTheme(), boutonFavoris());
   document.currentScript.replaceWith(d);
 }

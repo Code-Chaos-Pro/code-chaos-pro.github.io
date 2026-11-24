@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的账户</title>
+<meta name="description" content="您的 Code &amp; Chaos 账户。">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://codechaoslab.com/zh/compte">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?14">
+<script src="logiciels.js?12"></script>
+<script src="compte.js?4"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="./">Code &amp; Chaos</a>
+  <nav aria-label="页面"><a href="./">软件</a><a href="contact">提交工单</a><a href="tickets" id="mes-tickets" hidden>我的工单</a><a href="apropos">关于</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>我的账户</h1>
+  <p id="etat" role="status">正在加载…</p>
+</section>
+<div class="connexion" id="connexion"></div>
+<div class="tickets" id="mon-compte" hidden>
+<section class="encart"><h2>个人资料</h2>
+  <p class="doux">您的用户名和头像会显示在您的评价旁边。</p>
+  <form id="f-pseudo"><label class="champ" for="pseudo">用户名 <input id="pseudo"></label><p class="doux" id="e-pseudo" role="status"></p><div><button class="bouton">保存</button></div></form>
+  <h3>头像</h3><div class="avatars" id="avatars" role="group" aria-label="头像"></div>
+  <dl class="fiche" id="fiche"></dl>
+</section>
+<section class="encart"><h2>收藏</h2><div id="favoris"></div></section>
+<section class="encart"><h2>历史记录</h2><div id="historique"></div><div><button class="fermer" type="button" id="vider">清空历史记录</button></div></section>
+<section class="encart"><h2>退出登录</h2><div><button class="fermer" type="button" id="sortir">退出登录</button></div></section>
+<section class="encart"><h2>删除我的账户</h2><p>此操作无法撤销，将删除您的所有数据。</p><div><button class="bouton danger" type="button" id="supprimer">删除我的账户</button></div></section>
+</div>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos。免费软件。 <a href="/mentions-legales">法律声明（法语）</a> · <a href="/confidentialite">隐私（法语）</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>捐赠</a>
+</div></footer>
+<script>
+const $ = id => document.getElementById(id);
+const texte = t => { const p = document.createElement('p'); p.className = 'doux'; p.textContent = t; return p; };
+Object.assign($('pseudo'), PSEUDO);
+async function enregistrer(champs) {
+  await appel('/rest/v1/profils?id=eq.' + session.id, champs, { Prefer: 'return=minimal' }, 'PATCH');
+  changer({ ...session, ...champs });
+}
+$('avatars').append(...AVATARS.map((_, n) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.setAttribute('aria-label', `${"头像"} ${n + 1}`); b.append(avatar(n));
+  b.onclick = () => enregistrer({ avatar: n }).catch(() => { $('e-pseudo').textContent = "头像未保存，请重试。"; });
+  return b;
+}));
+$('f-pseudo').onsubmit = async e => {
+  e.preventDefault();
+  try { await enregistrer({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "用户名已保存。"; }
+  catch (x) { $('e-pseudo').textContent = erreurPseudo(x); }
+};
+function montrerFavoris() { $('favoris').replaceChildren(favoris.size ? listeLogiciels([...favoris].map(f => [f])) : texte("暂无收藏。请点击软件的星标。")); }
+async function montrerHistorique() {
+  let vus = [];
+  try { vus = await lireTable('historique?select=logiciel,vu&order=vu.desc'); } catch { return $('historique').replaceChildren(texte("无法读取历史记录。")); }
+  $('vider').hidden = !vus.length;
+  $('historique').replaceChildren(vus.length ? listeLogiciels(vus.map(v => [v.logiciel, dateFr(v.vu)])) : texte("您的历史记录为空。"));
+}
+$('vider').onclick = () => appel('/rest/v1/historique?compte=eq.' + session.id, undefined, {}, 'DELETE').then(montrerHistorique, () => $('historique').append(texte("历史记录未清空，请重试。")));
+$('sortir').onclick = deconnecter;
+$('supprimer').onclick = () => {
+  const { d, zone } = fenetre("删除我的账户？"), p = texte("此操作无法撤销，将删除您的所有数据。");
+  const b = bouton("删除", async () => {
+    b.disabled = true; p.textContent = "正在删除…";
+    try {
+      // Images des tickets d'abord : la base ne sait pas effacer les fichiers.
+      const dossier = session.id;
+      const images = await (await appel('/storage/v1/object/list/messages', { prefix: dossier, limit: 1000 })).json();
+      if (images.length) await appel('/storage/v1/object/messages', { prefixes: images.map(i => `${dossier}/${i.name}`) }, {}, 'DELETE');
+      await appel('/rest/v1/rpc/supprimer_compte', {});
+      d.close(); changer(null);
+    } catch { b.disabled = false; ecrire(p, "账户未删除，请重试。", true); }
+  }, 'bouton danger');
+  zone.append(p); d.lastChild.append(b);
+};
+let montre = null; // compte dont l'historique est déjà affiché
+async function montrer() {
+  $('mon-compte').hidden = !session?.pseudo;
+  $('connexion').replaceChildren();
+  if (!session?.pseudo) { montre = null; return montrerCompte($('etat'), $('connexion'), "请登录后查看您的账户。"); }
+  ecrire($('etat'), '');
+  $('pseudo').value = session.pseudo;
+  [...$('avatars').children].forEach((b, n) => b.setAttribute('aria-pressed', n === session.avatar));
+  $('fiche').replaceChildren(...[["电子邮箱", session.email || "无"], ["账户创建时间", dateFr(session.cree)]].flatMap(([t, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = t; dd.textContent = v; return [dt, dd]; }));
+  montrerFavoris();
+  if (montre !== session.id) { montre = session.id; montrerHistorique(); }
+}
+document.addEventListener('compte', montrer);
+document.addEventListener('favoris', montrerFavoris);
+compte.then(montrer);
+</script>
+</body>
+</html>

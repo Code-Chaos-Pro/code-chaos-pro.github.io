@@ -7,31 +7,79 @@
 <meta name="description" content="Windows용 무료 소프트웨어.">
 <link rel="canonical" href="https://codechaoslab.com/ko/">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?12">
-<script src="logiciels.js?10"></script>
-<script src="compte.js?2"></script>
+<link rel="stylesheet" href="/style.css?14">
+<script src="logiciels.js?12"></script>
+<script src="compte.js?4"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="페이지"><a href="./" aria-current="page">소프트웨어</a><a href="contact.html">티켓 만들기</a><a href="tickets.html" id="mes-tickets" hidden>내 티켓</a><a href="apropos.html">소개</a></nav>
+  <nav aria-label="페이지"><a href="./" aria-current="page">소프트웨어</a><a href="contact">티켓 만들기</a><a href="tickets" id="mes-tickets" hidden>내 티켓</a><a href="apropos">소개</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
 <section class="intro">
   <h1>Windows용 무료 소프트웨어</h1>
   <p class="doux">소프트웨어를 선택하면 다운로드하고 사용법을 볼 수 있습니다.</p>
+  <div id="total"></div>
+  <div class="barre-tri">
+    <label for="tri">정렬 <select id="tri"></select></label>
+    <div class="vues" id="vues" role="group" aria-label="보기">
+      <button type="button" data-vue="grille" aria-label="격자" title="격자"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="currentColor"/></svg></button>
+      <button type="button" data-vue="liste" aria-label="목록" title="목록"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h4v4H4zM10 6h10v2H10zM4 10h4v4H4zM10 11h10v2H10zM4 15h4v4H4zM10 16h10v2H10z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
   <div class="logiciels" id="logiciels"></div>
 </section>
 </main>
 <footer><div class="cadre">
-  <p class="doux">Code &amp; Chaos. 무료 소프트웨어. <a href="/mentions-legales.html">법적 고지 (프랑스어)</a> · <a href="/confidentialite.html">개인정보 (프랑스어)</a></p>
+  <p class="doux">Code &amp; Chaos. 무료 소프트웨어. <a href="/mentions-legales">법적 고지 (프랑스어)</a> · <a href="/confidentialite">개인정보 (프랑스어)</a></p>
   <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>후원하기</a>
 </div></footer>
 <script>
-document.getElementById('logiciels').innerHTML = LOGICIELS.map(l => `<a class="logiciel" href="${l.page}">
-  <img src="${l.icone}" alt="" width="88" height="88"><strong>${l.nom}</strong><span class="doux">버전 ${l.version}</span>
-  <dl class="fiche"><dt>업데이트</dt><dd>${dateFr(l.maj)}</dd><dt>출시</dt><dd>${dateFr(l.sortie)}</dd></dl></a>`).join('');
+const $ = id => document.getElementById(id);
+const lu = (k, choix) => { try { const v = localStorage.getItem(k); return choix.includes(v) ? v : choix[0]; } catch { return choix[0]; } };
+const note = (k, v) => { try { localStorage.setItem(k, v); } catch { } };
+const TRIS = {
+  aleatoire: ["무작위", (a, b) => a.hasard - b.hasard],
+  alphabetique: ["이름순", (a, b) => a.nom.localeCompare(b.nom, racine.lang)],
+  telechargements: ["다운로드 많은 순", (a, b) => b.telechargements - a.telechargements],
+  vues: ["조회 많은 순", (a, b) => b.vues - a.vues],
+  recents: ["최근 업데이트순", (a, b) => b.maj.localeCompare(a.maj)],
+};
+let comptes = null; // compteurs de la base ; null = elle ne répond pas, rien n'est affiché
+const liste = LOGICIELS.map(l => ({ ...l, hasard: Math.random(), vues: 0, telechargements: 0 }));
+function afficher() {
+  const vue = lu('vue', ['grille', 'liste']);
+  liste.sort(TRIS[$('tri').value][1]);
+  $('logiciels').classList.toggle('en-liste', vue === 'liste');
+  for (const b of $('vues').children) b.setAttribute('aria-pressed', b.dataset.vue === vue);
+  $('logiciels').innerHTML = liste.map(l => `<article class="logiciel">
+  <img src="${l.icone}" alt="" width="88" height="88"><div class="nom"><a href="${l.page}">${l.nom}</a><span class="doux">버전 ${l.version}</span><p class="description">${l.description}</p></div>
+  <div class="infos">${comptes ? `<div class="compteurs">${badgeVues(l.vues)}${badgeTelechargements(l.telechargements)}</div>` : ''}<dl class="fiche"><dt>업데이트</dt><dd>${dateFr(l.maj)}</dd><dt>출시</dt><dd>${dateFr(l.sortie)}</dd></dl></div></article>`).join('');
+  liste.forEach((l, i) => $('logiciels').children[i].append(etoile(l.id)));
+  const total = liste.reduce((t, l) => t + l.telechargements, 0);
+  $('total').innerHTML = total ? badgeTelechargements(total) : '';
+}
+// Tri et affichage : gardés dans le navigateur, et avec le compte si la personne est connectée.
+function garder(cle, valeur) {
+  note(cle, valeur); afficher();
+  if (session) ecrireTable('preferences?on_conflict=id', { tri: $('tri').value, vue: lu('vue', ['grille', 'liste']) }, ',resolution=merge-duplicates').catch(() => { });
+}
+async function preferences() {
+  if (session) try {
+    const [p] = await lireTable('preferences?select=tri,vue');
+    if (p) { note('tri', p.tri); note('vue', p.vue); $('tri').value = lu('tri', Object.keys(TRIS)); afficher(); }
+  } catch { }
+}
+for (const [cle, [nom]] of Object.entries(TRIS)) $('tri').add(new Option(nom, cle));
+$('tri').value = lu('tri', Object.keys(TRIS));
+$('tri').onchange = () => garder('tri', $('tri').value);
+for (const b of $('vues').children) b.onclick = () => garder('vue', b.dataset.vue);
+afficher();
+preferences();
+document.addEventListener('compte', preferences);
+compteurs().then(c => { comptes = c; if (c) liste.forEach(l => Object.assign(l, c[l.id])); afficher(); });
 </script>
 </body>
 </html>

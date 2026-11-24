@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TaskbarNest</title>
 <meta name="description" content="Папки приложений на панели задач Windows 11.">
-<link rel="canonical" href="https://codechaoslab.com/ru/taskbarnest.html">
+<link rel="canonical" href="https://codechaoslab.com/ru/taskbarnest">
 <link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?12">
-<script src="logiciels.js?10"></script>
-<script src="compte.js?2"></script>
+<link rel="stylesheet" href="/style.css?14">
+<script src="logiciels.js?12"></script>
+<script src="compte.js?4"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="Страницы"><a href="./">Программы</a><a href="contact.html">Создать обращение</a><a href="tickets.html" id="mes-tickets" hidden>Мои обращения</a><a href="apropos.html">О сайте</a></nav>
+  <nav aria-label="Страницы"><a href="./">Программы</a><a href="contact">Создать обращение</a><a href="tickets" id="mes-tickets" hidden>Мои обращения</a><a href="apropos">О сайте</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
@@ -22,9 +22,10 @@
   <div class="scene" id="scene"><div class="menu"><b>Творчество</b><div><i class="c1"></i><i class="c2 ouverte"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div></div><div class="barre"><span class="tuile c0"></span><span class="tuile c0"></span><button class="tuile dossier" id="dossier" type="button" aria-label="Открыть или закрыть папку-пример"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></button><span class="tuile c0"></span><span class="tuile c0"></span></div></div>
   <div class="infos">
     <img src="/images/taskbarnest.png" alt="" width="72" height="72">
-    <h1>TaskbarNest</h1>
+    <div class="titre" id="titre"><h1>TaskbarNest</h1></div>
     <p>Раскладывайте приложения по папкам прямо на панели задач Windows 11.</p>
     <a class="bouton" id="telecharger" aria-disabled="true">Временно недоступно (техработы)</a>
+    <div class="compteurs" id="compteurs"></div>
     <dl class="fiche" id="fiche"></dl>
     <p class="doux">Бесплатно. Windows 11, 64 бита. Без учётной записи и прав администратора.</p>
   </div>
@@ -102,12 +103,22 @@
 </section>
 </main>
 <footer><div class="cadre">
-  <p class="doux">Code &amp; Chaos. Бесплатные программы. <a href="/mentions-legales.html">Правовая информация (на французском)</a> · <a href="/confidentialite.html">Конфиденциальность (на французском)</a></p>
+  <p class="doux">Code &amp; Chaos. Бесплатные программы. <a href="/mentions-legales">Правовая информация (на французском)</a> · <a href="/confidentialite">Конфиденциальность (на французском)</a></p>
   <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Сделать пожертвование</a>
 </div></footer>
 <script>
 const l = LOGICIELS.find(x => x.id === 'taskbarnest');
 document.getElementById('fiche').innerHTML = `<dt>Версия</dt><dd>${l.version}</dd><dt>Обновлено</dt><dd>${dateFr(l.maj)}</dd><dt>Выпущено</dt><dd>${dateFr(l.sortie)}</dd><dt>Языки</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+document.getElementById('titre').append(etoile(l.id));
+async function montrerCompteurs() {
+  const c = await compteurs(), n = c?.[l.id] || { vues: 0, telechargements: 0 };
+  if (c) document.getElementById('compteurs').innerHTML = badgeVues(n.vues) + badgeTelechargements(n.telechargements);
+}
+if (!/bot|crawl|spider/i.test(navigator.userAgent)) compter(l.id, 'vue').then(montrerCompteurs);
+document.getElementById('telecharger').addEventListener('click', e => { if (e.currentTarget.href) compter(l.id, 'telechargement').then(montrerCompteurs); });
+function historique() { if (session) ecrireTable('historique?on_conflict=compte,logiciel', { logiciel: l.id, vu: new Date().toISOString() }, ',resolution=merge-duplicates').catch(() => { }); }
+historique();
+document.addEventListener('compte', historique);
 if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Скачать"; b.removeAttribute('aria-disabled'); }
 // Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
 const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
