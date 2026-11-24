@@ -56,6 +56,14 @@ const compte = (async () => {
   return !!session;
 })();
 
+// « Mes tickets » n'apparaît dans le menu qu'à partir du premier ticket envoyé.
+async function voirTickets() {
+  const lien = document.getElementById('mes-tickets');
+  try { lien.hidden = !session || !(await (await appel('/rest/v1/messages?select=id&limit=1')).json()).length; } catch { lien.hidden = true; }
+}
+document.addEventListener('compte', voirTickets);
+document.addEventListener('DOMContentLoaded', () => { if (session) voirTickets(); });
+
 function boutonCompte() {
   const b = document.createElement('button'), d = document.createElement('dialog');
   b.className = 'compte'; b.type = 'button';

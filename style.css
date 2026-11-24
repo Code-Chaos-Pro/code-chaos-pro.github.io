@@ -67,7 +67,7 @@ kbd { font: 600 .88em var(--corps); padding: 1px 7px; border: 1px solid var(--tr
 .scene .menu i { width: 36px; height: 36px; border-radius: 8px; position: relative; }
 .scene .menu i.ouverte::after { content: ""; position: absolute; left: 11px; bottom: -6px; width: 14px; height: 3px; border-radius: 2px; background: var(--trait-ouvert); }
 .scene.fermee .menu { opacity: 0; transform: translateY(8px); }
-.scene .bulle { align-self: center; margin-bottom: 10px; padding: 14px 18px; border: 2px dashed var(--accent); border-radius: 10px; background: var(--menu); }
+.scene .bulle { align-self: center; display: grid; place-items: center; width: 40px; height: 72px; margin-bottom: 10px; border: 2px solid var(--accent); border-radius: 10px; background: var(--menu); font-size: 1.4rem; }
 .scene .prise { position: absolute; left: 50%; bottom: 96px; transform: translate(34px, 0) rotate(8deg); box-shadow: 0 8px 18px #0006; }
 .c1 { background: #4f8cff } .c2 { background: #22c55e } .c3 { background: #f59e0b } .c4 { background: #ef4444 } .c5 { background: #a78bfa } .c6 { background: #14b8a6 } .c0 { background: var(--vide) }
 
@@ -108,9 +108,10 @@ dialog[open] { display: grid; gap: 16px; }
 dialog::backdrop { background: #0008; }
 dialog .connexion { display: grid; }
 .fermer { justify-self: start; padding: 8px 0; border: 0; background: none; font: inherit; color: var(--doux); text-decoration: underline; cursor: pointer; }
-/* Annonce d'envoi : descend un peu depuis le haut, attend, remonte. Seul son petit contour est flou. */
-.annonce { position: fixed; left: 50%; top: 24px; z-index: 10; padding: 14px; border-radius: 28px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); pointer-events: none; animation: annonce 3.2s ease both; }
-.annonce div { display: grid; justify-items: center; gap: 14px; padding: 28px 40px; border: 1px solid var(--trait); border-radius: 18px; background: var(--surface); font: 650 1.2rem var(--titre); text-align: center; }
+/* Annonce d'envoi : descend un peu depuis le haut, attend, remonte. Verre dépoli : la page se devine, floue, à travers le fond. */
+.annonce { position: fixed; left: 50%; top: 24px; z-index: 10; width: max-content; max-width: calc(100% - 40px); padding: 28px 40px; border: 1px solid var(--trait); border-radius: 18px; background: var(--surface); font: 650 1.2rem var(--titre); text-align: center; pointer-events: none; animation: annonce 3.2s ease both; }
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) { .annonce { background: color-mix(in srgb, var(--surface) 75%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); } }
+.annonce div { display: grid; justify-items: center; gap: 14px; }
 .annonce svg { width: 72px; height: 72px; fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
 .annonce circle { fill: var(--vert); stroke: none; }
 .annonce path { stroke-dasharray: 36; animation: coche .4s .55s ease both; }
@@ -118,3 +119,6 @@ dialog .connexion { display: grid; }
 @keyframes coche { from { stroke-dashoffset: 36; } to { stroke-dashoffset: 0; } }
 @keyframes fondu { 0%, 100% { opacity: 0; transform: translate(-50%, 0); } 16%, 84% { opacity: 1; transform: translate(-50%, 0); } }
 @media (prefers-reduced-motion: reduce) { .annonce { animation-name: fondu; } .annonce path { animation: none; } }
+.tickets { display: grid; gap: 20px; }
+.message { white-space: pre-wrap; overflow-wrap: anywhere; }
+.tickets .apercus img { width: auto; height: auto; max-height: 320px; }
