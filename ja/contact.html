@@ -7,9 +7,9 @@
 <meta name="description" content="要望や問題の報告を送る。">
 <link rel="canonical" href="https://codechaoslab.com/ja/contact">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -24,7 +24,7 @@
   <noscript><p>宛先： <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
 </section>
 <div class="connexion" id="connexion"></div>
-<section class="encart" id="envoye" tabindex="-1" hidden><h2>送信しました。ありがとうございます！</h2><p>返信が必要な場合はメールでお送りします。</p><div><button class="bouton" type="button" id="encore">別のメッセージを書く</button></div></section>
+<section class="encart" id="envoye" tabindex="-1" hidden><h2>送信しました。ありがとうございます！</h2><p>返信はマイチケットに届きます。メールでお知らせします。</p><div><button class="bouton" type="button" id="encore">別のメッセージを書く</button></div></section>
 <form id="formulaire" hidden>
   <fieldset><legend hidden>種類</legend>
     <label><input type="radio" name="type" id="t-demande" value="demande" checked> 要望</label>
@@ -85,9 +85,9 @@ $('formulaire').onsubmit = async e => {
       await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
       images.push(chemin);
     }
-    await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
+    await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images, langue: racine.lang }, { Prefer: 'return=minimal' });
     $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
-    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; voirTickets();
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; chargerProfil();
     return dire('');
   } catch (x) {
     if (x.code === 401) { poser(null); dire("セッションの有効期限が切れました。文章をコピーしてから再読み込みしてください。"); }

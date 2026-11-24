@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>お気に入り一覧</title>
+<meta name="description" content="お気に入りのソフト。">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://codechaoslab.com/ja/favoris">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="./">Code &amp; Chaos</a>
+  <nav aria-label="ページ"><a href="./">ソフト</a><a href="contact">チケットを作成</a><a href="tickets" id="mes-tickets" hidden>マイチケット</a><a href="apropos">このサイトについて</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>お気に入り一覧</h1>
+  <p id="etat" role="status">読み込み中…</p>
+  <div class="connexion" id="connexion"></div>
+  <div class="barre-tri" id="barre" hidden>
+    <label for="tri">並べ替え <select id="tri"></select></label>
+    <div class="vues" id="vues" role="group" aria-label="表示">
+      <button type="button" data-vue="grille" aria-label="グリッド" title="グリッド"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="currentColor"/></svg></button>
+      <button type="button" data-vue="liste" aria-label="リスト" title="リスト"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h4v4H4zM10 6h10v2H10zM4 10h4v4H4zM10 11h10v2H10zM4 15h4v4H4zM10 16h10v2H10z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+  <div class="logiciels" id="logiciels"></div>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos。無料ソフト。 <a href="/mentions-legales">法的事項（フランス語）</a> · <a href="/confidentialite">プライバシー（フランス語）</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>寄付する</a>
+</div></footer>
+<script>
+const $ = id => document.getElementById(id);
+const afficher = catalogue(l => favoris.has(l.id));
+document.addEventListener('favoris', () => {
+  $('barre').hidden = !favoris.size;
+  $('connexion').replaceChildren();
+  if (!session) montrerCompte($('etat'), $('connexion'), "お気に入りを見るにはログインしてください。");
+  else ecrire($('etat'), favoris.size ? '' : "お気に入りはまだありません。ソフトの星をクリックしてください。");
+  afficher();
+});
+compte.then(lireFavoris);
+</script>
+</body>
+</html>

@@ -8,9 +8,11 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://codechaoslab.com/nl/tickets">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+<script src="avis.js?1"></script>
+<script src="tickets.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -32,34 +34,17 @@
 </div></footer>
 <script>
 const $ = id => document.getElementById(id);
-const el = (balise, texte, classe) => { const e = document.createElement(balise); e.textContent = texte; if (classe) e.className = classe; return e; };
-// Images : privées, demandées avec la connexion de la personne. Affichées au clic seulement.
-async function montrerImages(zone, chemins) {
-  zone.replaceChildren();
-  for (const c of chemins) try {
-    const i = new Image(); i.src = URL.createObjectURL(await (await appel('/storage/v1/object/authenticated/messages/' + c)).blob()); i.alt = '';
-    zone.append(i);
-  } catch { zone.append(el('span', "Afbeelding niet beschikbaar", 'doux')); }
-}
-function ticket(t) {
-  const a = el('article', '', 'encart'), type = t.type === 'demande' ? "Een verzoek" : "Een probleem";
-  const sujet = (SUJETS[t.type] || []).find(([code]) => code === t.sujet)?.[1] || t.sujet;
-  const logiciel = LOGICIELS.find(l => l.id === t.logiciel)?.nom || "Anders";
-  const date = new Date(t.cree).toLocaleString(racine.lang, { dateStyle: 'long', timeStyle: 'short' });
-  a.append(el('h2', sujet), el('p', `${type} · ${logiciel} · ${date}`, 'doux'), el('p', t.texte, 'message'));
-  if (t.images.length) { const z = el('div', '', 'apercus'); z.append(bouton(`${"Afbeeldingen tonen"} (${t.images.length})`, () => montrerImages(z, t.images))); a.append(z); }
-  return a;
-}
+let montre = null;
 async function montrer() {
-  $('tickets').replaceChildren();
-  $('connexion').replaceChildren();
+  if (session && montre === session.id) return;
+  montre = session?.id; $('tickets').replaceChildren(); $('connexion').replaceChildren();
   if (!session) return montrerCompte($('etat'), $('connexion'), "Log in om je tickets te zien.");
   ecrire($('etat'), "Laden…");
   try {
-    const liste = await (await appel('/rest/v1/messages?select=cree,type,logiciel,sujet,texte,images&order=cree.desc&limit=100')).json();
-    ecrire($('etat'), liste.length ? '' : "Je hebt nog geen tickets.");
-    $('tickets').replaceChildren(...liste.map(ticket));
+    const cartes = await listerTickets($('tickets'), {}, false);
+    ecrire($('etat'), cartes.length ? '' : "Je hebt nog geen tickets.");
   } catch (x) {
+    montre = null;
     if (x.code === 401) return changer(null); // connexion expirée : les boutons reviennent
     ecrire($('etat'), "Je tickets kunnen niet worden gelezen.", true);
   }

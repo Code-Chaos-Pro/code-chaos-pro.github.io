@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 즐겨찾기</title>
+<meta name="description" content="즐겨찾는 프로그램입니다.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://codechaoslab.com/ko/favoris">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="./">Code &amp; Chaos</a>
+  <nav aria-label="페이지"><a href="./">소프트웨어</a><a href="contact">티켓 만들기</a><a href="tickets" id="mes-tickets" hidden>내 티켓</a><a href="apropos">소개</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>내 즐겨찾기</h1>
+  <p id="etat" role="status">불러오는 중…</p>
+  <div class="connexion" id="connexion"></div>
+  <div class="barre-tri" id="barre" hidden>
+    <label for="tri">정렬 <select id="tri"></select></label>
+    <div class="vues" id="vues" role="group" aria-label="보기">
+      <button type="button" data-vue="grille" aria-label="격자" title="격자"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="currentColor"/></svg></button>
+      <button type="button" data-vue="liste" aria-label="목록" title="목록"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h4v4H4zM10 6h10v2H10zM4 10h4v4H4zM10 11h10v2H10zM4 15h4v4H4zM10 16h10v2H10z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+  <div class="logiciels" id="logiciels"></div>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. 무료 소프트웨어. <a href="/mentions-legales">법적 고지 (프랑스어)</a> · <a href="/confidentialite">개인정보 (프랑스어)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>후원하기</a>
+</div></footer>
+<script>
+const $ = id => document.getElementById(id);
+const afficher = catalogue(l => favoris.has(l.id));
+document.addEventListener('favoris', () => {
+  $('barre').hidden = !favoris.size;
+  $('connexion').replaceChildren();
+  if (!session) montrerCompte($('etat'), $('connexion'), "즐겨찾기를 보려면 로그인하세요.");
+  else ecrire($('etat'), favoris.size ? '' : "아직 즐겨찾기가 없습니다. 프로그램의 별을 클릭하세요.");
+  afficher();
+});
+compte.then(lireFavoris);
+</script>
+</body>
+</html>

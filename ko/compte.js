@@ -8,6 +8,8 @@ const LOGOS = {
 };
 // Avatars tout prêts : pas d'image envoyée par les visiteurs, donc rien à vérifier.
 const AVATARS = [['🦊', '#f59e0b'], ['🐼', '#64748b'], ['🐸', '#22c55e'], ['🐙', '#ec4899'], ['🦉', '#a16207'], ['🐧', '#0ea5e9'], ['🐱', '#f97316'], ['🐶', '#84cc16'], ['🦄', '#a855f7'], ['🐝', '#eab308'], ['🤖', '#4f8cff'], ['👾', '#8b5cf6']];
+const bloc = (balise, classe, ...enfants) => { const e = document.createElement(balise); if (classe) e.className = classe; e.append(...enfants); return e; };
+const badgeCreateur = () => bloc('span', 'createur', "제작자");
 const avatar = n => { const s = document.createElement('span'); [s.textContent, s.style.background] = AVATARS[n] || AVATARS[0]; s.className = 'avatar'; s.setAttribute('aria-hidden', 'true'); return s; };
 const b64 = o => btoa(String.fromCharCode(...new Uint8Array(o))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
@@ -38,11 +40,12 @@ async function appel(chemin, corps, entetes = {}, methode) {
   if (!rep.ok) throw Object.assign(new Error(await rep.text()), { code: rep.status });
   return rep;
 }
+const rpc = async (nom, corps) => (await appel('/rest/v1/rpc/' + nom, corps)).json();
 const lireTable = async chemin => (await appel('/rest/v1/' + chemin)).json();
 const ecrireTable = (chemin, corps, plus = '') => appel('/rest/v1/' + chemin, corps, { Prefer: 'return=minimal' + plus });
 
-// Vues et téléchargements : comptés une fois par adresse IP (supabase/comptes.sql).
-const compter = (logiciel, type) => fetch(BASE + '/rest/v1/rpc/compter', { method: 'POST', keepalive: true, headers: { apikey: CLE, 'Content-Type': 'application/json' }, body: JSON.stringify({ logiciel, type }) }).catch(() => { });
+// Vues et téléchargements : un par compte, ou un par adresse IP sans compte (supabase/avis.sql).
+const compter = (logiciel, type) => appel('/rest/v1/rpc/compter', { logiciel, type }).catch(() => { });
 async function compteurs() {
   try {
     const rep = await fetch(BASE + '/rest/v1/rpc/compteurs', { method: 'POST', headers: { apikey: CLE, 'Content-Type': 'application/json' }, body: '{}' });
@@ -65,7 +68,7 @@ function deconnecter() { appel('/auth/v1/logout', {}).catch(() => { }).finally((
 // État du compte dans « etat » et boutons dans « zone » : tickets et fenêtre « Se connecter ».
 async function montrerCompte(etat, zone, invite) {
   zone.replaceChildren();
-  if (session) return ecrire(etat, `${"계정"} : ${session.pseudo || ''} (${session.email || "이메일 없는 계정입니다. 답변받을 주소를 적어 주세요"})`);
+  if (session) return etat.replaceChildren(`${"계정"} : `, session.pseudo ? bulle() : '', ` (${session.email || "이메일 없는 계정"})`);
   ecrire(etat, "불러오는 중…");
   try {
     const { external } = await (await appel('/auth/v1/settings')).json();
@@ -80,19 +83,21 @@ async function montrerCompte(etat, zone, invite) {
   } catch { ecrire(etat, "로그인이 응답하지 않습니다.", true); }
 }
 
-// Fenêtre par-dessus la page. fermable : clic en dehors, Échap et bouton « Fermer ».
-function fenetre(titre, fermable = true) {
-  const d = document.createElement('dialog'), h = document.createElement('h2'), zone = document.createElement('div');
-  h.textContent = titre; zone.className = 'contenu';
-  d.append(h, zone);
-  if (fermable) {
-    const pied = document.createElement('div'); pied.className = 'pied'; pied.append(bouton("닫기", () => d.close(), 'fermer')); d.append(pied);
-    d.onclick = e => { const r = d.getBoundingClientRect(); if (e.clientX && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) d.close(); };
-  } else d.oncancel = e => e.preventDefault();
+// Fenêtre par-dessus la page, fermée par son bouton, un clic en dehors ou Échap.
+function fenetre(titre, fermer = "닫기") {
+  const d = document.createElement('dialog'), h = document.createElement('h2'), zone = document.createElement('div'), pied = document.createElement('div');
+  h.textContent = titre; zone.className = 'contenu'; pied.className = 'pied';
+  pied.append(bouton(fermer, () => d.close(), 'fermer'));
+  d.append(h, zone, pied);
+  // Appui ET relâchement dehors : sélectionner du texte ou glisser sur les étoiles ne ferme pas.
+  const dehors = e => { const r = d.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+  let appui = false;
+  d.onpointerdown = e => { appui = dehors(e); };
+  d.onclick = e => { if (appui && dehors(e)) d.close(); };
   d.onclose = () => d.remove();
   document.body.append(d);
   d.showModal();
-  return { d, zone };
+  return { d, zone, pied };
 }
 function ouvrirConnexion(invite = "계정을 선택하세요. 처음 로그인할 때 만들어집니다.") {
   const { zone } = fenetre("로그인"), p = document.createElement('p'), c = document.createElement('div');
@@ -109,30 +114,43 @@ function erreurPseudo(x) {
   if (x.message.includes('profils_pseudo_check')) return "공백 없이 글자나 숫자 3~20자. 마침표, 하이픈, 밑줄을 쓸 수 있습니다.";
   return "사용자 이름이 저장되지 않았습니다. 다시 시도하세요.";
 }
-function demanderPseudo() {
-  return new Promise(fini => {
-    const { d, zone } = fenetre("사용자 이름을 선택하세요", false);
-    const p = document.createElement('p'), f = document.createElement('form'), champ = Object.assign(document.createElement('input'), PSEUDO), etat = document.createElement('p'), pied = document.createElement('div');
-    p.textContent = "리뷰 옆에 표시됩니다. 사용자 이름이 없으면 로그인을 완료할 수 없습니다.";
-    champ.setAttribute('aria-label', "사용자 이름"); etat.setAttribute('role', 'status'); etat.className = 'erreur'; pied.className = 'pied';
-    const ok = document.createElement('button'); ok.className = 'bouton'; ok.textContent = "확인";
-    pied.append(bouton("취소", async () => { await appel('/rest/v1/rpc/abandonner_compte', {}).catch(() => { }); d.close(); deconnecter(); fini(false); }, 'fermer'), ok);
-    f.append(champ, etat, pied); zone.append(p, f);
-    f.onsubmit = async e => {
-      e.preventDefault(); ok.disabled = true;
-      try { await ecrireTable('profils', { pseudo: champ.value.trim() }); d.close(); changer({ ...session, pseudo: champ.value.trim(), avatar: 0 }); fini(true); }
-      catch (x) { etat.textContent = erreurPseudo(x); }
-      finally { ok.disabled = false; }
-    };
-    champ.focus();
-  });
+// Première connexion : pseudonyme au hasard (mots lisibles dans toutes les langues), rien n'est pris de Google ou de Discord.
+async function creerProfil() {
+  const mots = ['Panda', 'Koala', 'Lynx', 'Puma', 'Gecko', 'Kiwi', 'Dodo', 'Cobra'], hasard = n => Math.floor(Math.random() * n);
+  for (let essai = 0; ; essai++) try {
+    const pseudo = mots[hasard(mots.length)] + (10000 + hasard(90000));
+    await ecrireTable('profils', { pseudo });
+    return changer({ ...session, pseudo, avatar: 0 });
+  } catch (x) { if (x.code !== 409 || essai === 4) throw x; } // déjà pris : un autre
 }
+function proposerPseudo() {
+  const { d, zone, pied } = fenetre("사용자 이름 변경", "건너뛰기");
+  const p = document.createElement('p'), f = document.createElement('form'), champ = Object.assign(document.createElement('input'), PSEUDO, { value: session.pseudo }), etat = document.createElement('p'), ok = document.createElement('button');
+  p.textContent = "리뷰 옆에 표시됩니다. 계정에서 언제든지 바꿀 수 있습니다.";
+  champ.setAttribute('aria-label', "사용자 이름"); etat.setAttribute('role', 'status'); etat.className = 'erreur';
+  f.id = 'f-premier'; ok.setAttribute('form', f.id); ok.className = 'bouton'; ok.textContent = "확인";
+  f.append(champ, etat); zone.append(p, f); pied.append(ok);
+  f.onsubmit = async e => {
+    e.preventDefault(); ok.disabled = true;
+    try { await modifierProfil({ pseudo: champ.value.trim() }); d.close(); }
+    catch (x) { etat.textContent = erreurPseudo(x); }
+    finally { ok.disabled = false; }
+  };
+  champ.select();
+}
+async function modifierProfil(champs) {
+  await appel('/rest/v1/profils?id=eq.' + session.id, champs, { Prefer: 'return=minimal' }, 'PATCH');
+  changer({ ...session, ...champs });
+}
+let etatTickets = { tickets: 0, non_lus: 0, dev_non_lus: 0 }; // pour « Mes tickets » et « Mode dev »
 async function chargerProfil() {
   if (!session) return;
   try {
-    const [p] = await lireTable('profils?select=pseudo,avatar&id=eq.' + session.id);
-    if (p) { if (p.pseudo !== session.pseudo || p.avatar !== session.avatar) changer({ ...session, ...p }); } // changé sur un autre appareil
-    else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demanderPseudo); else await demanderPseudo();
+    const [p] = await rpc('mon_profil', {});
+    if (p) {
+      etatTickets = p; document.dispatchEvent(new Event('tickets'));
+      if (p.pseudo !== session.pseudo || p.avatar !== session.avatar || p.dev !== !!session.dev) changer({ ...session, pseudo: p.pseudo, avatar: p.avatar, dev: p.dev }); // changé sur un autre appareil
+    } else { await creerProfil(); document.body ? proposerPseudo() : document.addEventListener('DOMContentLoaded', proposerPseudo); chargerProfil(); }
   } catch { } // base en pause : le reste du site marche
 }
 // Retour du service de connexion : ?code=… à échanger, ou ?error=…
@@ -150,13 +168,16 @@ const compte = (async () => {
   return !(code || refus) || !!session;
 })();
 
-// « Mes tickets » n'apparaît dans le menu qu'à partir du premier ticket envoyé.
-async function voirTickets() {
+// « Mes tickets » n'apparaît dans le menu qu'à partir du premier ticket envoyé ; un point signale une réponse non lue.
+function voirTickets() {
   const lien = document.getElementById('mes-tickets');
-  try { lien.hidden = !session || !(await lireTable('messages?select=id&limit=1')).length; } catch { lien.hidden = true; }
+  if (!lien) return;
+  lien.hidden = page !== 'tickets' && !(session && etatTickets.tickets);
+  lien.classList.toggle('non-lu', !!session && etatTickets.non_lus > 0);
 }
 document.addEventListener('compte', voirTickets);
-document.addEventListener('DOMContentLoaded', () => { if (session) voirTickets(); });
+document.addEventListener('tickets', voirTickets);
+document.addEventListener('DOMContentLoaded', voirTickets);
 
 // Favoris
 let favoris = new Set();
@@ -191,22 +212,27 @@ function listeLogiciels(ids) { // liens avec icône : favoris et historique
   return ul;
 }
 function boutonFavoris() {
-  const b = document.createElement('button');
-  b.type = 'button'; b.className = 'etoile ronde'; b.innerHTML = ETOILE; b.title = "내 즐겨찾기"; b.setAttribute('aria-label', "내 즐겨찾기");
-  b.onclick = () => {
-    if (!session) return ouvrirConnexion("즐겨찾기를 보려면 로그인하세요.");
-    const { zone } = fenetre("내 즐겨찾기");
-    if (favoris.size) zone.append(listeLogiciels([...favoris].map(f => [f])));
-    else { const p = document.createElement('p'); p.textContent = "아직 즐겨찾기가 없습니다. 프로그램의 별을 클릭하세요."; zone.append(p); }
-  };
-  return b;
+  const a = document.createElement('a');
+  a.className = 'etoile ronde'; a.href = 'favoris'; a.innerHTML = ETOILE; a.title = "내 즐겨찾기"; a.setAttribute('aria-label', "내 즐겨찾기");
+  a.onclick = e => { if (!session) { e.preventDefault(); ouvrirConnexion("즐겨찾기를 보려면 로그인하세요."); } };
+  return a;
+}
+function boutonDev() { // compte du créateur seulement (décidé par la base)
+  const a = bloc('a', 'mode-dev');
+  a.href = '/dev';
+  const montrer = () => { a.hidden = !session?.dev; a.textContent = "개발 모드" + (etatTickets.dev_non_lus ? ` (${etatTickets.dev_non_lus})` : ''); };
+  document.addEventListener('compte', montrer);
+  document.addEventListener('tickets', montrer);
+  montrer();
+  return a;
+}
+function bulle() { // avatar et pseudo, vers « Mon compte »
+  const a = document.createElement('a'); a.className = 'compte'; a.href = 'compte'; a.title = "내 계정"; a.append(avatar(session.avatar), session.pseudo); return a;
 }
 function boutonCompte() {
   const zone = document.createElement('span');
   const montrer = () => {
-    if (session?.pseudo) {
-      const a = document.createElement('a'); a.className = 'compte'; a.href = 'compte'; a.title = "내 계정"; a.append(avatar(session.avatar), session.pseudo); zone.replaceChildren(a);
-    } else zone.replaceChildren(bouton("로그인", () => session ? chargerProfil() : ouvrirConnexion(), 'compte'));
+    zone.replaceChildren(session?.pseudo ? bulle() : bouton("로그인", () => session ? chargerProfil() : ouvrirConnexion(), 'compte'));
   };
   document.addEventListener('compte', montrer);
   compte.then(ok => { if (!ok && page !== 'contact') ouvrirConnexion("로그인하지 못했습니다. 다시 시도하세요."); });

@@ -12,9 +12,8 @@ const SUJETS = {
 };
 const dateFr = d => d ? new Date(d).toLocaleString(document.documentElement.lang, { dateStyle: 'long', timeStyle: 'medium' }) : "Presto";
 const nombre = n => new Intl.NumberFormat(document.documentElement.lang, { notation: 'compact', maximumFractionDigits: 1 }).format(n); // 1,2 k ; 3 M
-const badge = (dessin, n, texte) => `<span class="compteur"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${dessin}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>${nombre(n)}</b> ${texte}</span>`;
-const badgeVues = n => badge('M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zm7 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0', n, "Visualizzazioni");
-const badgeTelechargements = n => badge('M12 3v12m-5-5 5 5 5-5M4 20h16', n, "Download");
+// Vues et téléchargements (compteurs de la base), en bas de la fiche. Rien si la base ne répond pas.
+const fiche = (l, n, plus = '') => `<dt>Aggiornato</dt><dd>${dateFr(l.maj)}</dd><dt>Pubblicato</dt><dd>${dateFr(l.sortie)}</dd>${plus}${n?.avis ? `<dt>Recensioni</dt><dd>★ ${(n.note / 2).toLocaleString(racine.lang, { maximumFractionDigits: 1 })} (${nombre(n.avis)})</dd>` : ''}${n ? `<dt>Visualizzazioni</dt><dd>${nombre(n.vues)}</dd><dt>Download</dt><dd>${nombre(n.telechargements)}</dd>` : ''}`;
 
 // Thème : celui de Windows, sauf si le visiteur a choisi avec l'interrupteur (gardé dans son navigateur).
 const racine = document.documentElement, sombreWindows = matchMedia('(prefers-color-scheme: dark)');
@@ -37,7 +36,7 @@ const LANGUES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch',
 // Adresses sans « .html » : GitHub sert /contact à partir de contact.html ; les anciens liens sont nettoyés.
 if (location.pathname.endsWith('.html')) history.replaceState(null, '', location.pathname.replace(/(index)?\.html$/, '') + location.search + location.hash);
 const page = location.pathname.split('/').pop();
-const traduite = ['', 'taskbarnest', 'contact', 'tickets', 'apropos', 'compte'].includes(page); // les autres n'existent qu'en français
+const traduite = ['', 'taskbarnest', 'contact', 'tickets', 'apropos', 'compte', 'favoris'].includes(page); // les autres n'existent qu'en français
 const adresse = (code, p) => (code === 'fr' ? '/' : `/${code}/`) + p;
 // À la racine : langue déjà choisie, sinon celle du navigateur, sinon l'anglais. Pas pour les robots (Google doit lire le français)
 // ni depuis TaskbarNest (?logiciel=), qui ouvre déjà sa langue.
@@ -60,6 +59,52 @@ function choixLangue() {
 function outils() {
   const d = document.createElement('div');
   d.className = 'outils';
-  d.append(choixLangue(), boutonCompte(), boutonTheme(), boutonFavoris());
+  d.append(choixLangue(), boutonDev(), boutonCompte(), boutonTheme(), boutonFavoris());
   document.currentScript.replaceWith(d);
+}
+// Liste des logiciels avec tri et affichage : accueil et favoris. Rend la fonction qui la redessine.
+function catalogue(garder = () => true) {
+  const g = id => document.getElementById(id);
+  const lu = (k, choix) => { try { const v = localStorage.getItem(k); return choix.includes(v) ? v : choix[0]; } catch { return choix[0]; } };
+  const note = (k, v) => { try { localStorage.setItem(k, v); } catch { } };
+  const TRIS = {
+    aleatoire: ["Casuale", (a, b) => a.hasard - b.hasard],
+    alphabetique: ["Alfabetico", (a, b) => a.nom.localeCompare(b.nom, racine.lang)],
+    telechargements: ["Più scaricati", (a, b) => b.telechargements - a.telechargements],
+    avis: ["Più recensiti", (a, b) => b.avis - a.avis],
+    vues: ["Più visti", (a, b) => b.vues - a.vues],
+    recents: ["Aggiornati di recente", (a, b) => b.maj.localeCompare(a.maj)],
+  };
+  let comptes = null; // null = la base ne répond pas
+  const tous = LOGICIELS.map(l => ({ ...l, hasard: Math.random(), vues: 0, telechargements: 0, avis: 0 }));
+  function afficher() {
+    const vue = lu('vue', ['grille', 'liste']);
+    const liste = tous.filter(garder).sort(TRIS[g('tri').value][1]);
+    g('logiciels').classList.toggle('en-liste', vue === 'liste');
+    for (const b of g('vues').children) b.setAttribute('aria-pressed', b.dataset.vue === vue);
+    g('logiciels').innerHTML = liste.map(l => `<article class="logiciel">
+    <img src="${l.icone}" alt="" width="88" height="88"><div class="nom"><a href="${l.page}">${l.nom}</a><span class="doux">Versione ${l.version}</span><p class="description">${l.description}</p></div>
+    <dl class="fiche">${fiche(l, comptes && l)}</dl></article>`).join('');
+    liste.forEach((l, i) => g('logiciels').children[i].append(etoile(l.id)));
+  }
+  // Tri et affichage : gardés dans le navigateur, et avec le compte si la personne est connectée.
+  function noter(cle, valeur) {
+    note(cle, valeur); afficher();
+    if (session) ecrireTable('preferences?on_conflict=id', { tri: g('tri').value, vue: lu('vue', ['grille', 'liste']) }, ',resolution=merge-duplicates').catch(() => { });
+  }
+  async function preferences() {
+    if (session) try {
+      const [p] = await lireTable('preferences?select=tri,vue');
+      if (p) { note('tri', p.tri); note('vue', p.vue); g('tri').value = lu('tri', Object.keys(TRIS)); afficher(); }
+    } catch { }
+  }
+  for (const [cle, [nom]] of Object.entries(TRIS)) g('tri').add(new Option(nom, cle));
+  g('tri').value = lu('tri', Object.keys(TRIS));
+  g('tri').onchange = () => noter('tri', g('tri').value);
+  for (const b of g('vues').children) b.onclick = () => noter('vue', b.dataset.vue);
+  afficher();
+  preferences();
+  document.addEventListener('compte', preferences);
+  compteurs().then(c => { comptes = c; if (c) tous.forEach(l => Object.assign(l, c[l.id])); afficher(); });
+  return afficher;
 }

@@ -8,9 +8,10 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://codechaoslab.com/ko/compte">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+<script src="avis.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -33,6 +34,7 @@
 </section>
 <section class="encart"><h2>즐겨찾기</h2><div id="favoris"></div></section>
 <section class="encart"><h2>기록</h2><div id="historique"></div><div><button class="fermer" type="button" id="vider">기록 지우기</button></div></section>
+<section class="encart"><h2>내 리뷰</h2><div class="colonne" id="mes-avis"></div></section>
 <section class="encart"><h2>로그아웃</h2><div><button class="fermer" type="button" id="sortir">로그아웃</button></div></section>
 <section class="encart"><h2>내 계정 삭제</h2><p>되돌릴 수 없으며 모든 데이터가 삭제됩니다.</p><div><button class="bouton danger" type="button" id="supprimer">내 계정 삭제</button></div></section>
 </div>
@@ -45,19 +47,15 @@
 const $ = id => document.getElementById(id);
 const texte = t => { const p = document.createElement('p'); p.className = 'doux'; p.textContent = t; return p; };
 Object.assign($('pseudo'), PSEUDO);
-async function enregistrer(champs) {
-  await appel('/rest/v1/profils?id=eq.' + session.id, champs, { Prefer: 'return=minimal' }, 'PATCH');
-  changer({ ...session, ...champs });
-}
 $('avatars').append(...AVATARS.map((_, n) => {
   const b = document.createElement('button');
   b.type = 'button'; b.setAttribute('aria-label', `${"아바타"} ${n + 1}`); b.append(avatar(n));
-  b.onclick = () => enregistrer({ avatar: n }).catch(() => { $('e-pseudo').textContent = "아바타가 저장되지 않았습니다. 다시 시도하세요."; });
+  b.onclick = () => modifierProfil({ avatar: n }).catch(() => { $('e-pseudo').textContent = "아바타가 저장되지 않았습니다. 다시 시도하세요."; });
   return b;
 }));
 $('f-pseudo').onsubmit = async e => {
   e.preventDefault();
-  try { await enregistrer({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "사용자 이름이 저장되었습니다."; }
+  try { await modifierProfil({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "사용자 이름이 저장되었습니다."; }
   catch (x) { $('e-pseudo').textContent = erreurPseudo(x); }
 };
 function montrerFavoris() { $('favoris').replaceChildren(favoris.size ? listeLogiciels([...favoris].map(f => [f])) : texte("아직 즐겨찾기가 없습니다. 프로그램의 별을 클릭하세요.")); }
@@ -70,7 +68,7 @@ async function montrerHistorique() {
 $('vider').onclick = () => appel('/rest/v1/historique?compte=eq.' + session.id, undefined, {}, 'DELETE').then(montrerHistorique, () => $('historique').append(texte("기록이 지워지지 않았습니다. 다시 시도하세요.")));
 $('sortir').onclick = deconnecter;
 $('supprimer').onclick = () => {
-  const { d, zone } = fenetre("내 계정을 삭제할까요?"), p = texte("되돌릴 수 없으며 모든 데이터가 삭제됩니다.");
+  const { d, zone, pied } = fenetre("내 계정을 삭제할까요?", "취소"), p = texte("되돌릴 수 없으며 모든 데이터가 삭제됩니다.");
   const b = bouton("삭제", async () => {
     b.disabled = true; p.textContent = "삭제 중…";
     try {
@@ -82,9 +80,18 @@ $('supprimer').onclick = () => {
       d.close(); changer(null);
     } catch { b.disabled = false; ecrire(p, "계정이 삭제되지 않았습니다. 다시 시도하세요.", true); }
   }, 'bouton danger');
-  zone.append(p); d.lastChild.append(b);
+  zone.append(p); pied.append(b);
 };
-let montre = null; // compte dont l'historique est déjà affiché
+async function montrerAvis(debut = 0) {
+  try {
+    const lus = await rpc('lire_avis', { les_miens: true, debut });
+    const cartes = lus.slice(0, PAGE).map(a => carteAvis(a, () => montrerAvis(), true));
+    if (lus.length > PAGE) { const suite = bouton("더 보기", () => { suite.remove(); montrerAvis(debut + PAGE); }, 'fermer'); cartes.push(suite); }
+    if (!lus.length && !debut) cartes.push(texte("아직 작성한 리뷰가 없습니다."));
+    debut ? $('mes-avis').append(...cartes) : $('mes-avis').replaceChildren(...cartes);
+  } catch { $('mes-avis').replaceChildren(texte("리뷰를 읽을 수 없습니다.")); }
+}
+let montre = null; // compte dont l'historique et les avis sont déjà affichés
 async function montrer() {
   $('mon-compte').hidden = !session?.pseudo;
   $('connexion').replaceChildren();
@@ -94,7 +101,7 @@ async function montrer() {
   [...$('avatars').children].forEach((b, n) => b.setAttribute('aria-pressed', n === session.avatar));
   $('fiche').replaceChildren(...[["이메일 주소", session.email || "없음"], ["계정 생성일", dateFr(session.cree)]].flatMap(([t, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = t; dd.textContent = v; return [dt, dd]; }));
   montrerFavoris();
-  if (montre !== session.id) { montre = session.id; montrerHistorique(); }
+  if (montre !== session.id) { montre = session.id; montrerHistorique(); montrerAvis(); }
 }
 document.addEventListener('compte', montrer);
 document.addEventListener('favoris', montrerFavoris);
