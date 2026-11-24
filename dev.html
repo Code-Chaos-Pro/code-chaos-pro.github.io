@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mode dev</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+<script src="avis.js?1"></script>
+<script src="tickets.js?1"></script>
+</head>
+<body>
+<!-- Page du créateur, en français seulement. Rien de secret ici : toutes les données et actions sont refusées par la base aux autres comptes. -->
+<header class="cadre entete">
+  <a class="sortir" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sortir du mode dev</a>
+  <script>{ const d = document.createElement('div'); d.className = 'outils'; d.append(boutonCompte(), boutonTheme()); document.currentScript.replaceWith(d); }</script>
+</header>
+<main class="cadre dev">
+<section class="intro">
+  <h1>Mode dev</h1>
+  <p id="etat" role="status">Chargement…</p>
+  <div class="connexion" id="connexion"></div>
+  <nav class="onglets" id="onglets" aria-label="Mode dev" hidden>
+    <button type="button" data-onglet="chiffres">Chiffres</button>
+    <button type="button" data-onglet="tickets">Tickets</button>
+    <button type="button" data-onglet="applis">Applis</button>
+    <button type="button" data-onglet="moderation">Modération</button>
+  </nav>
+</section>
+
+<section class="colonne" id="o-chiffres" hidden>
+  <div class="barre-tri"><label for="periode">Période <select id="periode"><option value="7">7 jours</option><option value="30" selected>30 jours</option><option value="90">90 jours</option></select></label></div>
+  <div class="tuiles" id="tuiles"></div>
+  <div class="graphiques" id="graphiques"></div>
+  <div class="encart"><h2>Par logiciel</h2><div class="defile"><table id="t-logiciels"></table></div></div>
+  <details class="encart"><summary>Tableau jour par jour</summary><div class="defile"><table id="t-jours"></table></div></details>
+</section>
+
+<section class="colonne" id="o-tickets" hidden>
+  <div class="onglets petits" id="etats"></div>
+  <div class="tickets" id="tickets"></div>
+</section>
+
+<section class="colonne" id="o-applis" hidden>
+  <div class="onglets petits" id="applis"></div>
+  <div class="section-avis">
+    <aside><p class="moyenne" id="moyenne"></p><div class="filtres" id="filtres" role="group" aria-label="Filtrer par note"></div></aside>
+    <div class="colonne"><div><button class="bouton" type="button" id="ecrire" hidden>Donner mon avis</button></div><div class="colonne" id="liste-avis"></div></div>
+  </div>
+</section>
+
+<section class="colonne" id="o-moderation" hidden>
+  <div class="encart"><h2>Textes signalés</h2><div class="colonne" id="signales"></div></div>
+  <div class="encart"><h2>Textes masqués</h2><div class="colonne" id="masques"></div></div>
+  <div class="encart"><h2>Comptes bloqués</h2><div class="colonne" id="bloques"></div></div>
+</section>
+</main>
+<script>
+const $ = id => document.getElementById(id), args = new URLSearchParams(location.search);
+const agir = (id, action) => rpcVide('dev_avis', { l_avis: id, action });
+const rpcVide = (nom, corps) => appel('/rest/v1/rpc/' + nom, corps);
+const panne = zone => zone.replaceChildren(bloc('p', 'doux', "Impossible de lire ces données. Rechargez la page."));
+const nomLogiciel = id => LOGICIELS.find(l => l.id === id)?.nom || id;
+
+// --- Chiffres
+const MESURES = { vues: "Vues", telechargements: "Téléchargements", comptes: "Comptes créés", avis: "Avis", tickets: "Tickets" };
+const jourCourt = j => new Date(j + 'T12:00:00').toLocaleDateString('fr', { day: 'numeric', month: 'short' });
+function tuile(titre, valeur, detail, onglet) {
+  const t = bloc(onglet ? 'button' : 'div', 'tuile-chiffre', bloc('span', 'doux', titre), bloc('strong', '', String(valeur)), bloc('span', 'doux', detail || ''));
+  if (onglet) { t.type = 'button'; t.onclick = () => choisir(onglet); }
+  return t;
+}
+// Une mesure par graphique : une seule couleur, jamais deux échelles. Survol ou flèches : la valeur du jour.
+function graphique(titre, jours, cle) {
+  const max = Math.max(1, ...jours.map(j => j[cle])), total = jours.reduce((t, j) => t + j[cle], 0), dit = bloc('span', 'doux'), barres = bloc('div', 'barres');
+  const repos = () => { dit.textContent = `${nombre(total)} sur la période`; [...barres.children].forEach(b => b.classList.remove('vise')); };
+  const viser = i => { i = Math.max(0, Math.min(jours.length - 1, i)); repos(); barres.children[i].classList.add('vise'); barres.dataset.i = i; dit.textContent = `${jourCourt(jours[i].jour)} : ${jours[i][cle]}`; };
+  for (const j of jours) { const b = bloc('i'); b.style.setProperty('--h', j[cle] / max); barres.append(b); }
+  barres.tabIndex = 0; barres.setAttribute('role', 'img'); barres.setAttribute('aria-label', `${titre} : ${total} sur la période, ${max} au plus en un jour. Détail dans le tableau jour par jour.`);
+  barres.onpointermove = e => { const r = barres.getBoundingClientRect(); viser(Math.floor((e.clientX - r.left) / r.width * jours.length)); };
+  barres.onpointerleave = barres.onblur = repos;
+  barres.onkeydown = e => { const p = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (p) { e.preventDefault(); viser(Number(barres.dataset.i ?? jours.length) + p); } };
+  repos();
+  return bloc('figure', 'graphique encart', bloc('figcaption', '', bloc('h3', '', titre), dit), bloc('span', 'doux max', String(max)), barres, bloc('div', 'axe doux', bloc('span', '', jourCourt(jours[0].jour)), bloc('span', '', jourCourt(jours.at(-1).jour))));
+}
+function table(id, titres, lignes) {
+  $(id).replaceChildren(bloc('thead', '', bloc('tr', '', ...titres.map(t => bloc('th', '', t)))), bloc('tbody', '', ...lignes.map(l => bloc('tr', '', ...l.map(c => bloc('td', '', String(c)))))));
+}
+async function chiffres() {
+  try {
+    const s = await rpc('dev_stats', { nb_jours: Number($('periode').value) }), somme = k => s.logiciels.reduce((t, l) => t + l[k], 0), vues = somme('vues'), tel = somme('telechargements');
+    const nAvis = somme('avis'), note = nAvis ? s.logiciels.reduce((t, l) => t + l.avis * (l.note || 0), 0) / nAvis / 2 : null;
+    $('tuiles').replaceChildren(
+      tuile("Vues", nombre(vues), "depuis le début"), tuile("Téléchargements", nombre(tel), vues ? `${Math.round(tel / vues * 100)} % des vues` : ''), tuile("Comptes", nombre(s.comptes), "ouverts"),
+      tuile("Avis", nombre(nAvis), note == null ? '' : `★ ${note.toLocaleString('fr', { maximumFractionDigits: 1 })} · ${nombre(s.reponses)} réponses`, 'applis'), tuile("Favoris", nombre(somme('favoris')), "ajoutés"),
+      tuile("Tickets en attente", s.attente, `${s.en_cours} en cours · ${s.clotures} clôturés`, 'tickets'), tuile("Textes signalés", s.signalements, `${s.masques} masqués`, 'moderation'), tuile("Comptes bloqués", s.bloques, '', 'moderation'));
+    $('graphiques').replaceChildren(...Object.entries(MESURES).map(([cle, titre]) => graphique(titre, s.jours, cle)));
+    table('t-logiciels', ["Logiciel", "Vues", "Téléchargements", "Favoris", "Avis", "Note"], s.logiciels.map(l => [nomLogiciel(l.logiciel), l.vues, l.telechargements, l.favoris, l.avis, l.note == null ? '–' : (l.note / 2).toLocaleString('fr', { maximumFractionDigits: 1 })]));
+    table('t-jours', ["Jour", ...Object.values(MESURES)], s.jours.slice().reverse().map(j => [jourCourt(j.jour), ...Object.keys(MESURES).map(k => j[k])]));
+  } catch { panne($('tuiles')); }
+}
+$('periode').onchange = chiffres;
+
+// --- Tickets
+let etatVoulu = 'attente';
+async function tickets() {
+  try {
+    const s = await rpc('dev_stats', { nb_jours: 1 }), n = { attente: s.attente, en_cours: s.en_cours, cloture: s.clotures };
+    $('etats').replaceChildren(...Object.entries({ attente: "En attente", en_cours: "En cours", cloture: "Clôturés" }).map(([e, nom]) => {
+      const b = bouton(`${nom} (${n[e]})`, () => { etatVoulu = e; args.delete('ticket'); tickets(); }, '');
+      b.setAttribute('aria-pressed', !args.has('ticket') && e === etatVoulu);
+      return b;
+    }));
+    const seul = args.get('ticket'); // lien reçu par e-mail
+    const cartes = await listerTickets($('tickets'), seul ? { le_ticket: Number(seul) } : { dans_etat: etatVoulu }, true, outilsTicket);
+    if (!cartes.length) $('tickets').replaceChildren(bloc('p', 'doux', seul ? "Ce ticket n’existe plus." : "Aucun ticket ici."));
+    else if (seul) cartes[0].ouvrir();
+  } catch { panne($('tickets')); }
+}
+function outilsTicket(t) {
+  const changer = action => rpcVide('dev_ticket', { le_ticket: t.id, action }).then(tickets, () => alert("L’action n’a pas marché. Réessayez."));
+  return [
+    t.etat === 'cloture' ? bouton("Rouvrir", () => changer('rouvrir'), 'fermer') : bouton("Clôturer", () => changer('cloturer'), 'fermer'),
+    lien("Supprimer", () => demander("Supprimer ce ticket ?", "Le ticket, ses images et la discussion seront effacés pour tout le monde.", "Supprimer", async () => {
+      if (t.images.length) await appel('/storage/v1/object/messages', { prefixes: t.images }, {}, 'DELETE');
+      await rpcVide('dev_ticket', { le_ticket: t.id, action: 'supprimer' });
+      tickets();
+    })),
+  ];
+}
+
+// --- Applis : avis, réponses du créateur, et actions de modération sous chaque texte
+const dePartout = fini => { fini(); moderation(); };
+actionsDev = (a, actions, fini) => {
+  if (a.signales) actions.append(bloc('span', 'etat attente', `signalé (${a.signales})`));
+  actions.append(lien(a.masque ? "Rétablir" : "Masquer", () => a.masque ? agir(a.id, 'retablir').then(() => dePartout(fini)) : demander("Masquer ce texte ?", "Les visiteurs ne le verront plus. Son auteur verra qu’il est masqué.", "Masquer", async () => { await agir(a.id, 'masquer'); dePartout(fini); })));
+  if (!a.le_mien) actions.append(lien("Supprimer", () => demander("Supprimer ce texte ?", "Il sera effacé pour tout le monde, avec ses réponses.", "Supprimer", async () => { await agir(a.id, 'supprimer'); dePartout(() => fini(-1)); })));
+  if (!a.le_mien && !a.createur) actions.append(a.bloque ? lien("Débloquer le compte", () => agir(a.id, 'debloquer').then(() => dePartout(fini)))
+    : lien("Bloquer le compte", () => demander("Bloquer ce compte ?", `${a.pseudo} ne pourra plus écrire d’avis ni voter. Les tickets restent possibles.`, "Bloquer", async () => { await agir(a.id, 'bloquer'); dePartout(fini); })));
+};
+let changerAppli = null;
+function applis(id = LOGICIELS[0].id) {
+  $('applis').replaceChildren(...LOGICIELS.map(l => { const b = bouton(l.nom, () => applis(l.id), ''), i = new Image(24, 24); i.src = l.icone; i.alt = ''; b.prepend(i); b.setAttribute('aria-pressed', l.id === id); return b; }));
+  changerAppli ? changerAppli(id) : changerAppli = sectionAvis(id);
+}
+
+// --- Modération
+const MOTIF = Object.fromEntries(MOTIFS);
+async function moderation() {
+  try {
+    const m = await rpc('dev_moderation', {});
+    const carte = (a, ...boutons) => {
+      const c = bloc('article', 'avis', bloc('div', 'qui', avatar(a.avatar), bloc('strong', '', a.pseudo), ...(a.note == null ? [] : [etoiles(a.note)]), bloc('span', 'doux', `${nomLogiciel(a.logiciel)}${a.note == null ? " · réponse" : ''} · ${dateFr(a.cree)}`), ...(a.bloque ? [bloc('span', 'etat cloture', "compte bloqué")] : [])), bloc('p', 'message', a.texte || "(note seule)"));
+      if (a.motifs) c.append(bloc('p', 'erreur', `${a.nombre} signalement${a.nombre > 1 ? 's' : ''} : ${[...new Set(a.motifs)].map(x => MOTIF[x]).join(", ")}`));
+      c.append(bloc('div', 'actions', ...boutons, lien("Supprimer", () => demander("Supprimer ce texte ?", "Il sera effacé pour tout le monde, avec ses réponses.", "Supprimer", async () => { await agir(a.id, 'supprimer'); moderation(); })),
+        a.bloque ? '' : lien("Bloquer le compte", () => demander("Bloquer ce compte ?", `${a.pseudo} ne pourra plus écrire d’avis ni voter. Les tickets restent possibles.`, "Bloquer", async () => { await agir(a.id, 'bloquer'); moderation(); }))));
+      return c;
+    };
+    const faire = (id, action) => () => agir(id, action).then(moderation);
+    const ou = (zone, liste, vide) => $(zone).replaceChildren(...(liste.length ? liste : [bloc('p', 'doux', vide)]));
+    ou('signales', m.signales.map(a => carte(a, bouton("Masquer", faire(a.id, 'masquer'), 'fermer'), bouton("Garder", faire(a.id, 'ignorer'), 'fermer'))), "Aucun texte signalé.");
+    ou('masques', m.masques.map(a => carte(a, bouton("Rétablir", faire(a.id, 'retablir'), 'fermer'))), "Aucun texte masqué.");
+    ou('bloques', m.bloques.map(p => bloc('div', 'qui', avatar(p.avatar), bloc('strong', '', p.pseudo), lien("Débloquer", () => rpcVide('dev_debloquer', { le_pseudo: p.pseudo }).then(moderation)))), "Aucun compte bloqué.");
+  } catch { panne($('signales')); }
+}
+
+const ONGLETS = { chiffres, tickets, applis, moderation };
+function choisir(o) {
+  for (const b of $('onglets').children) b.setAttribute('aria-pressed', b.dataset.onglet === o);
+  for (const k of Object.keys(ONGLETS)) $('o-' + k).hidden = k !== o;
+  ONGLETS[o]();
+}
+for (const b of $('onglets').children) b.onclick = () => { if (b.dataset.onglet === 'tickets') args.delete('ticket'); choisir(b.dataset.onglet); };
+let ouvert = false;
+function montrer() {
+  const ok = !!session?.dev;
+  $('onglets').hidden = !ok; $('connexion').replaceChildren();
+  if (ok && !ouvert) { ouvert = true; ecrire($('etat'), ''); choisir(args.has('ticket') ? 'tickets' : 'chiffres'); }
+  if (!ok) {
+    ouvert = false; Object.keys(ONGLETS).forEach(k => { $('o-' + k).hidden = true; });
+    if (session) ecrire($('etat'), "Cette page est réservée au créateur."); else montrerCompte($('etat'), $('connexion'), "Connectez-vous avec Google.");
+  }
+}
+document.addEventListener('compte', montrer);
+compte.then(montrer);
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your favorites</title>
+<meta name="description" content="Your favorite programs.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://codechaoslab.com/en/favoris">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+</head>
+<body>
+<header class="cadre entete">
+  <a class="marque" href="./">Code &amp; Chaos</a>
+  <nav aria-label="Pages"><a href="./">Software</a><a href="contact">Open a ticket</a><a href="tickets" id="mes-tickets" hidden>My tickets</a><a href="apropos">About</a></nav>
+  <script>outils()</script>
+</header>
+<main class="cadre">
+<section class="intro">
+  <h1>Your favorites</h1>
+  <p id="etat" role="status">Loading…</p>
+  <div class="connexion" id="connexion"></div>
+  <div class="barre-tri" id="barre" hidden>
+    <label for="tri">Sort by <select id="tri"></select></label>
+    <div class="vues" id="vues" role="group" aria-label="View">
+      <button type="button" data-vue="grille" aria-label="Grid" title="Grid"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="currentColor"/></svg></button>
+      <button type="button" data-vue="liste" aria-label="List" title="List"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h4v4H4zM10 6h10v2H10zM4 10h4v4H4zM10 11h10v2H10zM4 15h4v4H4zM10 16h10v2H10z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+  <div class="logiciels" id="logiciels"></div>
+</section>
+</main>
+<footer><div class="cadre">
+  <p class="doux">Code &amp; Chaos. Free software. <a href="/mentions-legales">Legal notice (French)</a> · <a href="/confidentialite">Privacy (French)</a></p>
+  <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Make a donation</a>
+</div></footer>
+<script>
+const $ = id => document.getElementById(id);
+const afficher = catalogue(l => favoris.has(l.id));
+document.addEventListener('favoris', () => {
+  $('barre').hidden = !favoris.size;
+  $('connexion').replaceChildren();
+  if (!session) montrerCompte($('etat'), $('connexion'), "Sign in to see your favorites.");
+  else ecrire($('etat'), favoris.size ? '' : "No favorites yet. Click the star of a program.");
+  afficher();
+});
+compte.then(lireFavoris);
+</script>
+</body>
+</html>

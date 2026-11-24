@@ -7,9 +7,10 @@
 <meta name="description" content="App folders in the Windows 11 taskbar.">
 <link rel="canonical" href="https://codechaoslab.com/en/taskbarnest">
 <link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+<script src="avis.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -25,7 +26,6 @@
     <div class="titre" id="titre"><h1>TaskbarNest</h1></div>
     <p>Organize your apps in folders, right in the Windows 11 taskbar.</p>
     <a class="bouton" id="telecharger" aria-disabled="true">Unavailable for now (maintenance)</a>
-    <div class="compteurs" id="compteurs"></div>
     <dl class="fiche" id="fiche"></dl>
     <p class="doux">Free. Windows 11, 64-bit. No account and no administrator rights needed.</p>
   </div>
@@ -101,6 +101,12 @@
   <p>Uninstalling restores your original settings.</p>
   <p class="doux">Your folders and settings stay on your PC. TaskbarNest only contacts GitHub to check for updates.</p>
 </section>
+
+<section id="avis" class="section-avis">
+  <h2>Reviews</h2>
+  <aside><p class="moyenne" id="moyenne"></p><div class="filtres" id="filtres" role="group" aria-label="Filter by rating"></div></aside>
+  <div class="colonne"><div><button class="bouton" type="button" id="ecrire" hidden>Write a review</button></div><div class="colonne" id="liste-avis"></div></div>
+</section>
 </main>
 <footer><div class="cadre">
   <p class="doux">Code &amp; Chaos. Free software. <a href="/mentions-legales">Legal notice (French)</a> · <a href="/confidentialite">Privacy (French)</a></p>
@@ -108,18 +114,17 @@
 </div></footer>
 <script>
 const l = LOGICIELS.find(x => x.id === 'taskbarnest');
-document.getElementById('fiche').innerHTML = `<dt>Version</dt><dd>${l.version}</dd><dt>Updated</dt><dd>${dateFr(l.maj)}</dd><dt>Released</dt><dd>${dateFr(l.sortie)}</dd><dt>Languages</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`;
+const montrerFiche = n => { document.getElementById('fiche').innerHTML = `<dt>Version</dt><dd>${l.version}</dd>` + fiche(l, n, `<dt>Languages</dt><dd>${Object.keys(LANGUES).length} : ${Object.values(LANGUES).join(", ")}</dd>`); };
+montrerFiche();
 document.getElementById('titre').append(etoile(l.id));
-async function montrerCompteurs() {
-  const c = await compteurs(), n = c?.[l.id] || { vues: 0, telechargements: 0 };
-  if (c) document.getElementById('compteurs').innerHTML = badgeVues(n.vues) + badgeTelechargements(n.telechargements);
-}
-if (!/bot|crawl|spider/i.test(navigator.userAgent)) compter(l.id, 'vue').then(montrerCompteurs);
+const montrerCompteurs = () => compteurs().then(c => montrerFiche(c && (c[l.id] || { vues: 0, telechargements: 0 })));
+if (!/bot|crawl|spider/i.test(navigator.userAgent)) compte.then(() => compter(l.id, 'vue')).then(montrerCompteurs);
 document.getElementById('telecharger').addEventListener('click', e => { if (e.currentTarget.href) compter(l.id, 'telechargement').then(montrerCompteurs); });
 function historique() { if (session) ecrireTable('historique?on_conflict=compte,logiciel', { logiciel: l.id, vu: new Date().toISOString() }, ',resolution=merge-duplicates').catch(() => { }); }
 historique();
 document.addEventListener('compte', historique);
 if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Download"; b.removeAttribute('aria-disabled'); }
+sectionAvis(l.id);
 // Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
 const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
 dossier.addEventListener('click', () => scene.classList.toggle('fermee'));

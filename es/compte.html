@@ -8,9 +8,10 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://codechaoslab.com/es/compte">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+<script src="avis.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -33,6 +34,7 @@
 </section>
 <section class="encart"><h2>Favoritos</h2><div id="favoris"></div></section>
 <section class="encart"><h2>Historial</h2><div id="historique"></div><div><button class="fermer" type="button" id="vider">Borrar el historial</button></div></section>
+<section class="encart"><h2>Mis opiniones</h2><div class="colonne" id="mes-avis"></div></section>
 <section class="encart"><h2>Cerrar sesión</h2><div><button class="fermer" type="button" id="sortir">Cerrar sesión</button></div></section>
 <section class="encart"><h2>Eliminar mi cuenta</h2><p>Esta acción es irreversible y eliminará todos tus datos.</p><div><button class="bouton danger" type="button" id="supprimer">Eliminar mi cuenta</button></div></section>
 </div>
@@ -45,19 +47,15 @@
 const $ = id => document.getElementById(id);
 const texte = t => { const p = document.createElement('p'); p.className = 'doux'; p.textContent = t; return p; };
 Object.assign($('pseudo'), PSEUDO);
-async function enregistrer(champs) {
-  await appel('/rest/v1/profils?id=eq.' + session.id, champs, { Prefer: 'return=minimal' }, 'PATCH');
-  changer({ ...session, ...champs });
-}
 $('avatars').append(...AVATARS.map((_, n) => {
   const b = document.createElement('button');
   b.type = 'button'; b.setAttribute('aria-label', `${"Avatar"} ${n + 1}`); b.append(avatar(n));
-  b.onclick = () => enregistrer({ avatar: n }).catch(() => { $('e-pseudo').textContent = "No se ha guardado el avatar. Inténtalo de nuevo."; });
+  b.onclick = () => modifierProfil({ avatar: n }).catch(() => { $('e-pseudo').textContent = "No se ha guardado el avatar. Inténtalo de nuevo."; });
   return b;
 }));
 $('f-pseudo').onsubmit = async e => {
   e.preventDefault();
-  try { await enregistrer({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "Nombre de usuario guardado."; }
+  try { await modifierProfil({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "Nombre de usuario guardado."; }
   catch (x) { $('e-pseudo').textContent = erreurPseudo(x); }
 };
 function montrerFavoris() { $('favoris').replaceChildren(favoris.size ? listeLogiciels([...favoris].map(f => [f])) : texte("Todavía no hay favoritos. Haz clic en la estrella de un programa.")); }
@@ -70,7 +68,7 @@ async function montrerHistorique() {
 $('vider').onclick = () => appel('/rest/v1/historique?compte=eq.' + session.id, undefined, {}, 'DELETE').then(montrerHistorique, () => $('historique').append(texte("No se ha borrado el historial. Inténtalo de nuevo.")));
 $('sortir').onclick = deconnecter;
 $('supprimer').onclick = () => {
-  const { d, zone } = fenetre("¿Eliminar mi cuenta?"), p = texte("Esta acción es irreversible y eliminará todos tus datos.");
+  const { d, zone, pied } = fenetre("¿Eliminar mi cuenta?", "Cancelar"), p = texte("Esta acción es irreversible y eliminará todos tus datos.");
   const b = bouton("Eliminar", async () => {
     b.disabled = true; p.textContent = "Eliminando…";
     try {
@@ -82,9 +80,18 @@ $('supprimer').onclick = () => {
       d.close(); changer(null);
     } catch { b.disabled = false; ecrire(p, "No se ha eliminado la cuenta. Inténtalo de nuevo.", true); }
   }, 'bouton danger');
-  zone.append(p); d.lastChild.append(b);
+  zone.append(p); pied.append(b);
 };
-let montre = null; // compte dont l'historique est déjà affiché
+async function montrerAvis(debut = 0) {
+  try {
+    const lus = await rpc('lire_avis', { les_miens: true, debut });
+    const cartes = lus.slice(0, PAGE).map(a => carteAvis(a, () => montrerAvis(), true));
+    if (lus.length > PAGE) { const suite = bouton("Mostrar más", () => { suite.remove(); montrerAvis(debut + PAGE); }, 'fermer'); cartes.push(suite); }
+    if (!lus.length && !debut) cartes.push(texte("Todavía no has escrito ninguna opinión."));
+    debut ? $('mes-avis').append(...cartes) : $('mes-avis').replaceChildren(...cartes);
+  } catch { $('mes-avis').replaceChildren(texte("No se pueden leer las opiniones.")); }
+}
+let montre = null; // compte dont l'historique et les avis sont déjà affichés
 async function montrer() {
   $('mon-compte').hidden = !session?.pseudo;
   $('connexion').replaceChildren();
@@ -94,7 +101,7 @@ async function montrer() {
   [...$('avatars').children].forEach((b, n) => b.setAttribute('aria-pressed', n === session.avatar));
   $('fiche').replaceChildren(...[["Correo electrónico", session.email || "Ninguno"], ["Cuenta creada", dateFr(session.cree)]].flatMap(([t, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = t; dd.textContent = v; return [dt, dd]; }));
   montrerFavoris();
-  if (montre !== session.id) { montre = session.id; montrerHistorique(); }
+  if (montre !== session.id) { montre = session.id; montrerHistorique(); montrerAvis(); }
 }
 document.addEventListener('compte', montrer);
 document.addEventListener('favoris', montrerFavoris);

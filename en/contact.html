@@ -7,9 +7,9 @@
 <meta name="description" content="Make a request or report a problem.">
 <link rel="canonical" href="https://codechaoslab.com/en/contact">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -24,7 +24,7 @@
   <noscript><p>Write to <a href="mailto:contact.codechaos@gmail.com">contact.codechaos@gmail.com</a>.</p></noscript>
 </section>
 <div class="connexion" id="connexion"></div>
-<section class="encart" id="envoye" tabindex="-1" hidden><h2>Message sent. Thank you!</h2><p>If a reply is useful, it will come by email.</p><div><button class="bouton" type="button" id="encore">Write another message</button></div></section>
+<section class="encart" id="envoye" tabindex="-1" hidden><h2>Message sent. Thank you!</h2><p>The reply will appear in My tickets. You will be notified by email.</p><div><button class="bouton" type="button" id="encore">Write another message</button></div></section>
 <form id="formulaire" hidden>
   <fieldset><legend hidden>Message type</legend>
     <label><input type="radio" name="type" id="t-demande" value="demande" checked> A request</label>
@@ -85,9 +85,9 @@ $('formulaire').onsubmit = async e => {
       await appel('/storage/v1/object/messages/' + chemin, await reduire(f).catch(() => { throw new Error('image'); }));
       images.push(chemin);
     }
-    await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images }, { Prefer: 'return=minimal' });
+    await appel('/rest/v1/messages', { type: $('t-signalement').checked ? 'signalement' : 'demande', logiciel: $('logiciel').value, sujet: $('sujet').value, texte: $('texte').value, images, langue: racine.lang }, { Prefer: 'return=minimal' });
     $('texte').value = $('images').value = ''; $('apercus').replaceChildren();
-    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; voirTickets();
+    $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; chargerProfil();
     return dire('');
   } catch (x) {
     if (x.code === 401) { poser(null); dire("Your session has expired. Copy your text, then reload the page."); }

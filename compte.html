@@ -8,9 +8,10 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://codechaoslab.com/compte">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?14">
-<script src="logiciels.js?12"></script>
-<script src="compte.js?4"></script>
+<link rel="stylesheet" href="/style.css?15">
+<script src="logiciels.js?13"></script>
+<script src="compte.js?5"></script>
+<script src="avis.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -33,6 +34,7 @@
 </section>
 <section class="encart"><h2>Favoris</h2><div id="favoris"></div></section>
 <section class="encart"><h2>Historique</h2><div id="historique"></div><div><button class="fermer" type="button" id="vider">Vider l’historique</button></div></section>
+<section class="encart"><h2>Mes avis</h2><div class="colonne" id="mes-avis"></div></section>
 <section class="encart"><h2>Se déconnecter</h2><div><button class="fermer" type="button" id="sortir">Se déconnecter</button></div></section>
 <section class="encart"><h2>Supprimer mon compte</h2><p>Cette action est irréversible et supprimera toutes vos données.</p><div><button class="bouton danger" type="button" id="supprimer">Supprimer mon compte</button></div></section>
 </div>
@@ -45,19 +47,15 @@
 const $ = id => document.getElementById(id);
 const texte = t => { const p = document.createElement('p'); p.className = 'doux'; p.textContent = t; return p; };
 Object.assign($('pseudo'), PSEUDO);
-async function enregistrer(champs) {
-  await appel('/rest/v1/profils?id=eq.' + session.id, champs, { Prefer: 'return=minimal' }, 'PATCH');
-  changer({ ...session, ...champs });
-}
 $('avatars').append(...AVATARS.map((_, n) => {
   const b = document.createElement('button');
   b.type = 'button'; b.setAttribute('aria-label', `${"Avatar"} ${n + 1}`); b.append(avatar(n));
-  b.onclick = () => enregistrer({ avatar: n }).catch(() => { $('e-pseudo').textContent = "L’avatar n’a pas été enregistré. Réessayez."; });
+  b.onclick = () => modifierProfil({ avatar: n }).catch(() => { $('e-pseudo').textContent = "L’avatar n’a pas été enregistré. Réessayez."; });
   return b;
 }));
 $('f-pseudo').onsubmit = async e => {
   e.preventDefault();
-  try { await enregistrer({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "Pseudonyme enregistré."; }
+  try { await modifierProfil({ pseudo: $('pseudo').value.trim() }); $('e-pseudo').textContent = "Pseudonyme enregistré."; }
   catch (x) { $('e-pseudo').textContent = erreurPseudo(x); }
 };
 function montrerFavoris() { $('favoris').replaceChildren(favoris.size ? listeLogiciels([...favoris].map(f => [f])) : texte("Aucun favori pour l’instant. Cliquez sur l’étoile d’un logiciel.")); }
@@ -70,7 +68,7 @@ async function montrerHistorique() {
 $('vider').onclick = () => appel('/rest/v1/historique?compte=eq.' + session.id, undefined, {}, 'DELETE').then(montrerHistorique, () => $('historique').append(texte("L’historique n’a pas été vidé. Réessayez.")));
 $('sortir').onclick = deconnecter;
 $('supprimer').onclick = () => {
-  const { d, zone } = fenetre("Supprimer mon compte ?"), p = texte("Cette action est irréversible et supprimera toutes vos données.");
+  const { d, zone, pied } = fenetre("Supprimer mon compte ?", "Annuler"), p = texte("Cette action est irréversible et supprimera toutes vos données.");
   const b = bouton("Supprimer", async () => {
     b.disabled = true; p.textContent = "Suppression…";
     try {
@@ -82,9 +80,18 @@ $('supprimer').onclick = () => {
       d.close(); changer(null);
     } catch { b.disabled = false; ecrire(p, "Le compte n’a pas été supprimé. Réessayez.", true); }
   }, 'bouton danger');
-  zone.append(p); d.lastChild.append(b);
+  zone.append(p); pied.append(b);
 };
-let montre = null; // compte dont l'historique est déjà affiché
+async function montrerAvis(debut = 0) {
+  try {
+    const lus = await rpc('lire_avis', { les_miens: true, debut });
+    const cartes = lus.slice(0, PAGE).map(a => carteAvis(a, () => montrerAvis(), true));
+    if (lus.length > PAGE) { const suite = bouton("Afficher plus", () => { suite.remove(); montrerAvis(debut + PAGE); }, 'fermer'); cartes.push(suite); }
+    if (!lus.length && !debut) cartes.push(texte("Vous n’avez pas encore donné d’avis."));
+    debut ? $('mes-avis').append(...cartes) : $('mes-avis').replaceChildren(...cartes);
+  } catch { $('mes-avis').replaceChildren(texte("Les avis ne peuvent pas être lus.")); }
+}
+let montre = null; // compte dont l'historique et les avis sont déjà affichés
 async function montrer() {
   $('mon-compte').hidden = !session?.pseudo;
   $('connexion').replaceChildren();
@@ -94,7 +101,7 @@ async function montrer() {
   [...$('avatars').children].forEach((b, n) => b.setAttribute('aria-pressed', n === session.avatar));
   $('fiche').replaceChildren(...[["Adresse e-mail", session.email || "Aucune"], ["Compte créé le", dateFr(session.cree)]].flatMap(([t, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = t; dd.textContent = v; return [dt, dd]; }));
   montrerFavoris();
-  if (montre !== session.id) { montre = session.id; montrerHistorique(); }
+  if (montre !== session.id) { montre = session.id; montrerHistorique(); montrerAvis(); }
 }
 document.addEventListener('compte', montrer);
 document.addEventListener('favoris', montrerFavoris);
