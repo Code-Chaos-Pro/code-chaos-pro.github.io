@@ -23,8 +23,8 @@ function boutonTheme() {
 
 // Langues du site : le français à la racine, les autres dans /en/, /es/… (fabriquées par traduire-site.py).
 const LANGUES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch', it: 'Italiano', pt: 'Português', nl: 'Nederlands', pl: 'Polski', ru: 'Русский', tr: 'Türkçe', ja: '日本語', zh: '中文（简体）', ko: '한국어' };
-const page = location.pathname.split('/').pop() || 'index.html';
-const traduite = ['index.html', 'taskbarnest.html', 'contact.html', 'apropos.html'].includes(page); // les autres n'existent qu'en français
+const page = location.pathname.split('/').pop().replace('index.html', '');
+const traduite = ['', 'taskbarnest.html', 'contact.html', 'apropos.html'].includes(page); // les autres n'existent qu'en français
 const adresse = (code, p) => (code === 'fr' ? '/' : `/${code}/`) + p;
 // À la racine : langue déjà choisie, sinon celle du navigateur, sinon l'anglais. Pas pour les robots (Google doit lire le français)
 // ni depuis TaskbarNest (?logiciel=), qui ouvre déjà sa langue.
@@ -40,7 +40,7 @@ function choixLangue() {
   for (const [code, nom] of Object.entries(LANGUES)) s.add(new Option(nom, code, false, code === racine.lang));
   s.onchange = () => {
     try { localStorage.setItem('langue', s.value); } catch { }
-    location.href = adresse(s.value, traduite ? page + location.search : 'index.html');
+    location.href = adresse(s.value, traduite ? page + location.search : '');
   };
   return s;
 }
