@@ -75,7 +75,7 @@ kbd { font: 600 .88em var(--corps); padding: 1px 7px; border: 1px solid var(--tr
 form { display: grid; gap: 20px; max-width: 640px; }
 fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 24px; }
 label.champ { display: grid; gap: 6px; font-weight: 600; }
-select, textarea, input[type=file] { font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--trait); border-radius: 8px; padding: 10px 12px; width: 100%; }
+select, textarea, input:not([type=radio]) { font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--trait); border-radius: 8px; padding: 10px 12px; width: 100%; }
 textarea { min-height: 160px; resize: vertical; }
 .apercus { display: flex; flex-wrap: wrap; gap: 10px; }
 .apercus img { width: 110px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--trait); }
@@ -107,7 +107,9 @@ dialog { width: min(420px, calc(100% - 40px)); padding: 28px; border: 1px solid 
 dialog[open] { display: grid; gap: 16px; }
 dialog::backdrop { background: #0008; }
 dialog .connexion { display: grid; }
-.fermer { justify-self: start; padding: 8px 0; border: 0; background: none; font: inherit; color: var(--doux); text-decoration: underline; cursor: pointer; }
+dialog form, .contenu { display: grid; gap: 16px; }
+.fermer { padding: 9px 28px; border: 1px solid var(--trait); border-radius: 8px; background: var(--fond); color: var(--texte); font: 600 1rem var(--corps); cursor: pointer; }
+.fermer:hover { border-color: var(--accent); }
 /* Annonce d'envoi : descend un peu depuis le haut, attend, remonte. Verre dépoli : la page se devine, floue, à travers le fond. */
 .annonce { position: fixed; left: 50%; top: 24px; z-index: 10; width: max-content; max-width: calc(100% - 40px); padding: 28px 40px; border: 1px solid var(--trait); border-radius: 18px; background: var(--surface); font: 650 1.2rem var(--titre); text-align: center; pointer-events: none; animation: annonce 3.2s ease both; }
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) { .annonce { background: color-mix(in srgb, var(--surface) 75%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); } }
@@ -135,3 +137,51 @@ option { background: var(--surface); color: var(--texte); }
 input[type=file] { padding: 8px; cursor: pointer; }
 input[type=file]::file-selector-button { margin-right: 14px; padding: 8px 16px; border: 1px solid var(--trait); border-radius: 6px; background: var(--fond); color: var(--texte); font: 600 .95rem var(--corps); cursor: pointer; }
 input[type=file]::file-selector-button:hover { border-color: var(--accent); color: var(--accent); }
+/* Compteur de téléchargements, encadré pour se démarquer */
+.compteur { display: inline-flex; align-items: center; gap: 8px; justify-self: start; padding: 6px 14px; border: 1px solid var(--accent); border-radius: 10px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--texte); font-size: .92rem; }
+.compteur svg { width: 16px; height: 16px; color: var(--accent); }
+.compteur b { font-size: 1.05rem; }
+/* Accueil : tri et affichage en grille ou en liste */
+.barre-tri { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; margin-top: 8px; }
+.barre-tri label { display: flex; align-items: center; gap: 10px; color: var(--doux); }
+.barre-tri select { width: auto; padding-block: 7px; }
+.vues { display: flex; gap: 4px; }
+.vues button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--trait); border-radius: 8px; background: var(--surface); color: var(--doux); cursor: pointer; }
+.vues button svg { width: 20px; height: 20px; }
+.vues button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.logiciel .nom { display: grid; gap: 4px; }
+.logiciel .infos { display: grid; gap: 6px; margin-top: 8px; }
+.logiciel .description { display: none; }
+.logiciels.en-liste { grid-template-columns: minmax(0, 1fr); }
+.logiciels.en-liste .logiciel { grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 28px; align-items: center; }
+.logiciels.en-liste .logiciel img { margin: 0; }
+.logiciels.en-liste .description { display: block; margin-top: 6px; }
+@media (max-width: 760px) { .logiciels.en-liste .logiciel { grid-template-columns: auto minmax(0, 1fr); } .logiciels.en-liste .infos { grid-column: 1 / -1; } }
+/* Comptes : avatar, étoile des favoris, page « Mon compte » */
+.outils a.compte { display: inline-flex; align-items: center; gap: 8px; padding-left: 4px; text-decoration: none; max-width: 220px; overflow: hidden; white-space: nowrap; background: var(--surface); border-color: var(--trait); color: var(--texte); }
+.outils a.compte:hover { border-color: var(--accent); }
+.avatar { display: inline-grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; font-size: 15px; line-height: 1; }
+.avatars { display: flex; flex-wrap: wrap; gap: 10px; }
+.avatars button { padding: 3px; border: 2px solid transparent; border-radius: 50%; background: none; cursor: pointer; display: grid; }
+.avatars button[aria-pressed="true"] { border-color: var(--accent); }
+.avatars .avatar { width: 48px; height: 48px; font-size: 27px; }
+.etoile { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--doux); cursor: pointer; }
+.etoile svg { width: 24px; height: 24px; }
+.etoile:hover, .etoile[aria-pressed="true"] { color: var(--ambre); }
+.etoile[aria-pressed="true"] path { fill: currentColor; }
+.etoile.ronde { width: 34px; height: 34px; border: 1px solid var(--trait); background: var(--surface); }
+.etoile.ronde svg { width: 19px; height: 19px; }
+.logiciel { position: relative; }
+.logiciel .etoile { position: absolute; top: 10px; right: 10px; }
+.logiciel .nom a { color: inherit; text-decoration: none; font: 650 1.25rem var(--titre); }
+.logiciel .nom a::after { content: ""; position: absolute; inset: 0; border-radius: 14px; }
+.logiciels.en-liste .logiciel { padding-right: 64px; }
+.compteurs { display: flex; flex-wrap: wrap; gap: 8px; }
+.titre { display: flex; align-items: center; gap: 12px; }
+.mini { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.mini li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 20px; }
+.mini a { display: inline-flex; align-items: center; gap: 12px; font-weight: 650; color: var(--texte); }
+.bouton.danger { background: var(--rouge); color: #fff; }
+.erreur { color: var(--rouge); }
+.pied { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.connexion:empty { display: none; }

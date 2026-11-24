@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open a ticket</title>
 <meta name="description" content="Make a request or report a problem.">
-<link rel="canonical" href="https://codechaoslab.com/en/contact.html">
+<link rel="canonical" href="https://codechaoslab.com/en/contact">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?12">
-<script src="logiciels.js?10"></script>
-<script src="compte.js?2"></script>
+<link rel="stylesheet" href="/style.css?14">
+<script src="logiciels.js?12"></script>
+<script src="compte.js?4"></script>
 </head>
 <body>
 <header class="cadre entete">
   <a class="marque" href="./">Code &amp; Chaos</a>
-  <nav aria-label="Pages"><a href="./">Software</a><a href="contact.html">Open a ticket</a><a href="tickets.html" id="mes-tickets" hidden>My tickets</a><a href="apropos.html">About</a></nav>
+  <nav aria-label="Pages"><a href="./">Software</a><a href="contact">Open a ticket</a><a href="tickets" id="mes-tickets" hidden>My tickets</a><a href="apropos">About</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
@@ -35,13 +35,13 @@
   <label class="champ" for="texte">Description <textarea id="texte" maxlength="4000" required></textarea></label>
   <label class="champ" for="images">Images (optional, 1 or more) <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
-  <p class="doux">Your message is only used to reply to you. <a href="/confidentialite.html">Privacy (French)</a></p>
+  <p class="doux">Your message is only used to reply to you. <a href="/confidentialite">Privacy (French)</a></p>
   <div><button class="bouton" id="envoyer">Send</button></div>
 </form>
 </main>
 <div class="annonce" id="annonce" aria-hidden="true" hidden><div><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-17"/></svg><span>Message sent</span></div></div>
 <footer><div class="cadre">
-  <p class="doux">Code &amp; Chaos. Free software. <a href="/mentions-legales.html">Legal notice (French)</a> · <a href="/confidentialite.html">Privacy (French)</a></p>
+  <p class="doux">Code &amp; Chaos. Free software. <a href="/mentions-legales">Legal notice (French)</a> · <a href="/confidentialite">Privacy (French)</a></p>
   <a class="don" href="https://ko-fi.com/codechaos"><svg viewBox="0 0 20 16" width="20" height="16" aria-hidden="true"><path d="M14,4 H15.5 A3,3 0 0 1 15.5,10 H14" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M1,2 H14 V10 A4,4 0 0 1 10,14 H5 A4,4 0 0 1 1,10 Z" fill="#fff"/><path d="M7.5,11.5 L4.2,8 A2,2 0 0 1 7.5,5.6 A2,2 0 0 1 10.8,8 Z" fill="#ff5e5b"/></svg>Make a donation</a>
 </div></footer>
 <script>
@@ -90,7 +90,7 @@ $('formulaire').onsubmit = async e => {
     $('formulaire').hidden = true; $('envoye').hidden = false; $('envoye').focus(); $('annonce').hidden = false; voirTickets();
     return dire('');
   } catch (x) {
-    if (x.code === 401) { session = null; garder('session'); dire("Your session has expired. Copy your text, then reload the page."); }
+    if (x.code === 401) { poser(null); dire("Your session has expired. Copy your text, then reload the page."); }
     else if (x.message === 'image') dire("One of the images could not be read. Remove it and try again.");
     else if (x.message.includes('limite')) dire("You have already sent 5 messages in 24 hours. Try again later.");
     else dire("The message was not sent.", true);
