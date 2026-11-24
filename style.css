@@ -122,3 +122,16 @@ dialog .connexion { display: grid; }
 .tickets { display: grid; gap: 20px; }
 .message { white-space: pre-wrap; overflow-wrap: anywhere; }
 .tickets .apercus img { width: auto; height: auto; max-height: 320px; }
+/* Connexion : couleurs et logos officiels de Google et de Discord, dans les deux thèmes */
+.service { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 16px 0 12px; border: 1px solid transparent; border-radius: 8px; background: var(--accent); color: var(--sur-accent); font: 600 1rem var(--corps); cursor: pointer; }
+.service svg { width: 20px; height: 20px; flex: none; }
+.service.google { background: #fff; border-color: #747775; color: #1f1f1f; }
+.service.discord { background: #5865f2; color: #fff; }
+.service:hover { filter: brightness(.94); }
+/* Listes et choix de fichiers : flèche et bouton dessinés par le site (ceux du navigateur juraient en thème sombre) */
+select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--doux) 50%), linear-gradient(-45deg, transparent 50%, var(--doux) 50%); background-position: right 21px center, right 16px center; background-size: 5px 5px; background-repeat: no-repeat; }
+.outils .langue { padding-right: 34px; background-color: var(--surface); background-image: linear-gradient(45deg, transparent 50%, var(--doux) 50%), linear-gradient(-45deg, transparent 50%, var(--doux) 50%); background-position: right 18px center, right 13px center; background-size: 5px 5px; background-repeat: no-repeat; }
+option { background: var(--surface); color: var(--texte); }
+input[type=file] { padding: 8px; cursor: pointer; }
+input[type=file]::file-selector-button { margin-right: 14px; padding: 8px 16px; border: 1px solid var(--trait); border-radius: 6px; background: var(--fond); color: var(--texte); font: 600 .95rem var(--corps); cursor: pointer; }
+input[type=file]::file-selector-button:hover { border-color: var(--accent); color: var(--accent); }
