@@ -8,11 +8,12 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://codechaoslab.com/en/tickets">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?15">
-<script src="logiciels.js?13"></script>
-<script src="compte.js?5"></script>
-<script src="avis.js?1"></script>
-<script src="tickets.js?1"></script>
+<link rel="stylesheet" href="/style.css?16">
+<script src="logiciels.js?14"></script>
+<script src="compte.js?6"></script>
+<script src="avis.js?2"></script>
+<script src="direct.js?1"></script>
+<script src="tickets.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -34,22 +35,45 @@
 </div></footer>
 <script>
 const $ = id => document.getElementById(id);
-let montre = null;
+const cartes = new Map(); // numéro → carte : seules les nouveautés changent à l'écran
+let compteVu = null, plus = null;
 async function montrer() {
-  if (session && montre === session.id) return;
-  montre = session?.id; $('tickets').replaceChildren(); $('connexion').replaceChildren();
+  if (!session || compteVu !== session.id) { cartes.clear(); $('tickets').replaceChildren(); }
+  compteVu = session?.id; $('connexion').replaceChildren();
   if (!session) return montrerCompte($('etat'), $('connexion'), "Sign in to see your tickets.");
-  ecrire($('etat'), "Loading…");
+  if (!cartes.size) ecrire($('etat'), "Loading…");
   try {
-    const cartes = await listerTickets($('tickets'), {}, false);
-    ecrire($('etat'), cartes.length ? '' : "You have no tickets yet.");
+    const lus = [];
+    for (let debut = 0; debut <= Math.max(0, cartes.size - 1); debut += PAGE) {
+      const page = await rpc('lire_tickets', { tous: false, debut });
+      lus.push(...page.slice(0, PAGE));
+      if (page.length <= PAGE) { plus?.remove(); plus = null; break; }
+      if (!plus) plus = bouton("Show more", suite, 'fermer');
+    }
+    ranger(lus);
+    for (const [id, c] of cartes) if (!lus.some(t => t.id === id)) { c.remove(); cartes.delete(id); }
+    if (plus) $('tickets').append(plus);
+    ecrire($('etat'), cartes.size ? '' : "You have no tickets yet.");
   } catch (x) {
-    montre = null;
     if (x.code === 401) return changer(null); // connexion expirée : les boutons reviennent
-    ecrire($('etat'), "Your tickets cannot be read.", true);
+    if (!cartes.size) ecrire($('etat'), "Your tickets cannot be read.", true);
   }
 }
+function ranger(lus, enBas) {
+  for (const t of enBas ? lus : lus.slice().reverse()) {
+    if (cartes.has(t.id)) { cartes.get(t.id).maj(t); continue; }
+    const c = carteTicket(t); cartes.set(t.id, c); $('tickets')[enBas ? 'append' : 'prepend'](c);
+  }
+}
+async function suite() {
+  const page = await rpc('lire_tickets', { tous: false, debut: cartes.size }).catch(() => []);
+  ranger(page.slice(0, PAGE), true);
+  if (page.length > PAGE) $('tickets').append(plus); else { plus.remove(); plus = null; }
+}
 document.addEventListener('compte', montrer);
+const relire = regrouper(montrer);
+document.addEventListener('direct', e => { if (['tickets', 'tout'].includes(e.detail.quoi)) relire(); });
+setInterval(() => { if (session && !document.hidden && !enDirect('compte:' + session.id)) montrer(); }, 15000); // secours si le temps réel est coupé
 compte.then(montrer);
 </script>
 </body>

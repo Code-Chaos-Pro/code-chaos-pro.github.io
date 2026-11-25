@@ -242,27 +242,5 @@ dialog.large { width: min(560px, calc(100% - 40px)); }
 .sortir { display: inline-flex; align-items: center; gap: 8px; margin-right: auto; padding: 9px 16px; border-radius: 8px; background: #d92d2d; color: #fff; font-weight: 650; text-decoration: none; }
 .sortir:hover, .mode-dev:hover { filter: brightness(1.08); }
 .sortir svg { width: 20px; height: 20px; }
-main.dev { gap: 24px; }
-.onglets { display: flex; flex-wrap: wrap; gap: 8px; }
-.onglets button { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border: 1px solid var(--trait); border-radius: 8px; background: var(--surface); color: var(--texte); font: 600 1rem var(--corps); cursor: pointer; }
-.onglets button:hover { border-color: var(--accent); }
-.onglets button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--sur-accent); }
-.onglets.petits button { padding: 6px 14px; font-size: .95rem; }
-.tuiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-.tuile-chiffre { display: grid; align-content: start; gap: 2px; padding: 16px; border: 1px solid var(--trait); border-radius: 14px; background: var(--surface); color: var(--texte); font: inherit; font-size: .92rem; text-align: left; }
-button.tuile-chiffre { cursor: pointer; } button.tuile-chiffre:hover { border-color: var(--accent); }
-.tuile-chiffre strong { font: 700 1.8rem var(--titre); }
-.graphiques { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
-.graphique { margin: 0; padding: 18px; gap: 6px; }
-.graphique figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; }
-.graphique .max { font-size: .84rem; border-bottom: 1px solid var(--trait); }
-.barres { display: flex; align-items: flex-end; gap: 2px; height: 120px; border-bottom: 1px solid var(--trait); }
-.barres i { flex: 1; min-width: 1px; height: calc(var(--h) * 100%); border-radius: 4px 4px 0 0; background: var(--accent); }
-.barres i.vise { filter: brightness(1.25); outline: 1px solid var(--texte); }
-.axe { display: flex; justify-content: space-between; font-size: .84rem; }
-.defile { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
-th, td { padding: 7px 14px 7px 0; border-bottom: 1px solid var(--trait); text-align: right; white-space: nowrap; }
-th:first-child, td:first-child { text-align: left; }
-th { color: var(--doux); font-weight: 600; }
-summary { cursor: pointer; font-weight: 650; }
+.messages { max-height: 60vh; overflow-y: auto; padding-right: 4px; }
+.ticket .discussion { margin-top: 14px; }

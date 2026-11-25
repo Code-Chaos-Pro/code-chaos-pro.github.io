@@ -8,10 +8,11 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://codechaoslab.com/es/compte">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?15">
-<script src="logiciels.js?13"></script>
-<script src="compte.js?5"></script>
-<script src="avis.js?1"></script>
+<link rel="stylesheet" href="/style.css?16">
+<script src="logiciels.js?14"></script>
+<script src="compte.js?6"></script>
+<script src="direct.js?1"></script>
+<script src="avis.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -105,6 +106,8 @@ async function montrer() {
 }
 document.addEventListener('compte', montrer);
 document.addEventListener('favoris', montrerFavoris);
+const relireAvis = regrouper(() => { $('mes-avis').querySelector('form') ? relireAvis() : montrerAvis(); }, 1500);
+document.addEventListener('direct', e => { if (e.detail.sujet.startsWith('compte:') && ['avis', 'tout'].includes(e.detail.quoi)) relireAvis(); });
 compte.then(montrer);
 </script>
 </body>
