@@ -7,14 +7,14 @@
 <meta name="description" content="요청을 보내거나 문제를 신고하세요.">
 <link rel="canonical" href="https://codechaoslab.com/ko/contact">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?16">
+<link rel="stylesheet" href="/style.css?19">
 <script src="logiciels.js?14"></script>
 <script src="compte.js?6"></script>
 <script src="direct.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
-  <a class="marque" href="./">Code &amp; Chaos</a>
+  <a class="marque" href="./">Code <span>&amp;</span> Chaos</a>
   <nav aria-label="페이지"><a href="./">소프트웨어</a><a href="contact">티켓 만들기</a><a href="tickets" id="mes-tickets" hidden>내 티켓</a><a href="apropos">소개</a></nav>
   <script>outils()</script>
 </header>
@@ -37,7 +37,7 @@
   <label class="champ" for="images">이미지 (선택, 1개 이상) <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
   <p class="doux">메시지는 답변을 위해서만 사용됩니다. <a href="/confidentialite">개인정보 (프랑스어)</a></p>
-  <div><button class="bouton" id="envoyer">보내기</button></div>
+  <div><button class="bouton" id="envoyer">보내기 (CTRL + Enter)</button></div>
 </form>
 </main>
 <div class="annonce" id="annonce" aria-hidden="true" hidden><div><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-17"/></svg><span>메시지를 보냈습니다</span></div></div>
@@ -98,6 +98,7 @@ $('formulaire').onsubmit = async e => {
   } finally { $('envoyer').disabled = false; }
   $('etat').scrollIntoView({ block: 'center' });
 };
+$('texte').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !$('envoyer').disabled) $('formulaire').requestSubmit(); };
 $('encore').onclick = montrer;
 $('annonce').onanimationend = e => { if (e.target === e.currentTarget) e.target.hidden = true; };
 document.addEventListener('compte', montrer);

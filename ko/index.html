@@ -7,21 +7,22 @@
 <meta name="description" content="Windows용 무료 소프트웨어.">
 <link rel="canonical" href="https://codechaoslab.com/ko/">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?16">
+<link rel="stylesheet" href="/style.css?19">
 <script src="logiciels.js?14"></script>
 <script src="compte.js?6"></script>
 <script src="direct.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
-  <a class="marque" href="./">Code &amp; Chaos</a>
+  <a class="marque" href="./">Code <span>&amp;</span> Chaos</a>
   <nav aria-label="페이지"><a href="./" aria-current="page">소프트웨어</a><a href="contact">티켓 만들기</a><a href="tickets" id="mes-tickets" hidden>내 티켓</a><a href="apropos">소개</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
 <section class="intro">
-  <h1>Windows용 무료 소프트웨어</h1>
-  <p class="doux">소프트웨어를 선택하면 다운로드하고 사용법을 볼 수 있습니다.</p>
+  <div class="accueil"><div><h1>Windows용 무료 소프트웨어</h1>
+  <p class="doux">소프트웨어를 선택하면 다운로드하고 사용법을 볼 수 있습니다.</p></div>
+  <div class="lettres" id="lettres" aria-hidden="true"></div></div>
   <div class="barre-tri">
     <label for="tri">정렬 <select id="tri"></select></label>
     <div class="vues" id="vues" role="group" aria-label="보기">
@@ -38,6 +39,25 @@
 </div></footer>
 <script>
 catalogue();
+// Les lettres de « code & chaos » : départ au hasard, arrivée alignée pour « code », de travers pour « chaos ». Un clic recommence.
+const lettres = document.getElementById('lettres'), hasard = n => Math.round((Math.random() * 2 - 1) * n);
+function melanger() {
+  let k = 0;
+  lettres.replaceChildren(...['<code>', '&', '<chaos/>'].map((mot, ligne) => {
+    const d = document.createElement('div');
+    for (const c of mot) {
+      const s = document.createElement('span');
+      s.textContent = c;
+      const v = { x: hasard(170) + 'px', y: hasard(110) + 'px', r: hasard(200) + 'deg', d: k++ * 45 + 'ms', t: `var(--t${ligne === 1 ? 4 : /[<>/]/.test(c) ? 1 : ligne === 0 ? 2 : 3})` };
+      if (ligne === 2) Object.assign(v, { f: hasard(16) + 'deg', b: hasard(9) + 'px' });
+      for (const [n, x] of Object.entries(v)) s.style.setProperty('--' + n, x);
+      d.append(s);
+    }
+    return d;
+  }));
+}
+melanger();
+lettres.onclick = () => { lettres.classList.add('clic'); melanger(); }; // clic : animé même si Windows coupe les animations
 </script>
 </body>
 </html>

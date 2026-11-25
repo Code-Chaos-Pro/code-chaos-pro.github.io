@@ -30,7 +30,7 @@ function discussion(t) {
     if (clos === (t.etat === 'cloture')) return; // ne pas effacer une réponse en cours d'écriture
     clos = t.etat === 'cloture';
     if (clos) return pied.replaceChildren(bloc('p', 'doux', "To zgłoszenie jest zamknięte."));
-    const champ = Object.assign(document.createElement('textarea'), { maxLength: 4000, required: true, placeholder: "Twoja odpowiedź" }), dit = bloc('p', 'erreur'), ok = bloc('button', 'bouton petit', "Wyślij"), f = bloc('form', 'reponse', champ, dit, bloc('div', '', ok));
+    const champ = Object.assign(document.createElement('textarea'), { maxLength: 4000, required: true, placeholder: "Twoja odpowiedź" }), dit = bloc('p', 'erreur'), ok = bloc('button', 'bouton petit', "Wyślij (CTRL + Enter)"), f = bloc('form', 'reponse', champ, dit, bloc('div', '', ok));
     champ.setAttribute('aria-label', "Twoja odpowiedź"); dit.setAttribute('role', 'status');
     champ.onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) f.requestSubmit(); };
     f.onsubmit = async e => {

@@ -7,14 +7,14 @@
 <meta name="description" content="提出建议或报告问题。">
 <link rel="canonical" href="https://codechaoslab.com/zh/contact">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?16">
+<link rel="stylesheet" href="/style.css?19">
 <script src="logiciels.js?14"></script>
 <script src="compte.js?6"></script>
 <script src="direct.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
-  <a class="marque" href="./">Code &amp; Chaos</a>
+  <a class="marque" href="./">Code <span>&amp;</span> Chaos</a>
   <nav aria-label="页面"><a href="./">软件</a><a href="contact">提交工单</a><a href="tickets" id="mes-tickets" hidden>我的工单</a><a href="apropos">关于</a></nav>
   <script>outils()</script>
 </header>
@@ -37,7 +37,7 @@
   <label class="champ" for="images">图片（可选，1 张或更多） <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
   <p class="doux">你的消息仅用于回复你。 <a href="/confidentialite">隐私（法语）</a></p>
-  <div><button class="bouton" id="envoyer">发送</button></div>
+  <div><button class="bouton" id="envoyer">发送（CTRL + Enter）</button></div>
 </form>
 </main>
 <div class="annonce" id="annonce" aria-hidden="true" hidden><div><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-17"/></svg><span>消息已发送</span></div></div>
@@ -98,6 +98,7 @@ $('formulaire').onsubmit = async e => {
   } finally { $('envoyer').disabled = false; }
   $('etat').scrollIntoView({ block: 'center' });
 };
+$('texte').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !$('envoyer').disabled) $('formulaire').requestSubmit(); };
 $('encore').onclick = montrer;
 $('annonce').onanimationend = e => { if (e.target === e.currentTarget) e.target.hidden = true; };
 document.addEventListener('compte', montrer);

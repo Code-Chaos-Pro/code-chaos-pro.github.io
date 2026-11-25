@@ -7,21 +7,22 @@
 <meta name="description" content="适用于 Windows 的免费软件。">
 <link rel="canonical" href="https://codechaoslab.com/zh/">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?16">
+<link rel="stylesheet" href="/style.css?19">
 <script src="logiciels.js?14"></script>
 <script src="compte.js?6"></script>
 <script src="direct.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
-  <a class="marque" href="./">Code &amp; Chaos</a>
+  <a class="marque" href="./">Code <span>&amp;</span> Chaos</a>
   <nav aria-label="页面"><a href="./" aria-current="page">软件</a><a href="contact">提交工单</a><a href="tickets" id="mes-tickets" hidden>我的工单</a><a href="apropos">关于</a></nav>
   <script>outils()</script>
 </header>
 <main class="cadre">
 <section class="intro">
-  <h1>适用于 Windows 的免费软件</h1>
-  <p class="doux">选择一款软件，即可下载并查看使用方法。</p>
+  <div class="accueil"><div><h1>适用于 Windows 的免费软件</h1>
+  <p class="doux">选择一款软件，即可下载并查看使用方法。</p></div>
+  <div class="lettres" id="lettres" aria-hidden="true"></div></div>
   <div class="barre-tri">
     <label for="tri">排序方式 <select id="tri"></select></label>
     <div class="vues" id="vues" role="group" aria-label="视图">
@@ -38,6 +39,25 @@
 </div></footer>
 <script>
 catalogue();
+// Les lettres de « code & chaos » : départ au hasard, arrivée alignée pour « code », de travers pour « chaos ». Un clic recommence.
+const lettres = document.getElementById('lettres'), hasard = n => Math.round((Math.random() * 2 - 1) * n);
+function melanger() {
+  let k = 0;
+  lettres.replaceChildren(...['<code>', '&', '<chaos/>'].map((mot, ligne) => {
+    const d = document.createElement('div');
+    for (const c of mot) {
+      const s = document.createElement('span');
+      s.textContent = c;
+      const v = { x: hasard(170) + 'px', y: hasard(110) + 'px', r: hasard(200) + 'deg', d: k++ * 45 + 'ms', t: `var(--t${ligne === 1 ? 4 : /[<>/]/.test(c) ? 1 : ligne === 0 ? 2 : 3})` };
+      if (ligne === 2) Object.assign(v, { f: hasard(16) + 'deg', b: hasard(9) + 'px' });
+      for (const [n, x] of Object.entries(v)) s.style.setProperty('--' + n, x);
+      d.append(s);
+    }
+    return d;
+  }));
+}
+melanger();
+lettres.onclick = () => { lettres.classList.add('clic'); melanger(); }; // clic : animé même si Windows coupe les animations
 </script>
 </body>
 </html>
