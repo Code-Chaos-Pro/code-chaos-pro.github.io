@@ -150,10 +150,11 @@ function modifierReponse(a, carte, texte, fini) {
   const f = formulaireReponse(a.texte, async t => { await changerAvis(a.id, { texte: t }); fini(); }, () => { f.remove(); texte.hidden = false; });
   texte.hidden = true; texte.after(f); f.querySelector('textarea').focus();
 }
+const ouvertes = new Set(); // avis dont les réponses sont affichées : gardées ouvertes quand la liste se rafraîchit
 // « Afficher les réponses » et « Répondre », toujours visibles sous l'avis.
 function reponses(a, carte, actions) {
-  const zone = bloc('div', 'reponses'), voir = lien('', () => { zone.hidden = !zone.hidden; montrer(); if (!zone.hidden) charger(); });
-  zone.hidden = true;
+  const zone = bloc('div', 'reponses'), voir = lien('', () => { zone.hidden = !zone.hidden; ouvertes[zone.hidden ? 'delete' : 'add'](a.id); montrer(); if (!zone.hidden) charger(); });
+  zone.hidden = !ouvertes.has(a.id) || !a.reponses;
   const montrer = () => { voir.hidden = !a.reponses; voir.textContent = `${zone.hidden ? "返信を表示" : "返信を隠す"} (${nombre(a.reponses)})`; voir.setAttribute('aria-expanded', !zone.hidden); };
   async function charger(debut = 0) {
     try {
@@ -166,11 +167,12 @@ function reponses(a, carte, actions) {
   actions.append(lien("返信", () => {
     if (!session) return ouvrirConnexion("返信するにはログインしてください。");
     if (carte.querySelector(':scope > form')) return;
-    const f = formulaireReponse('', async t => { await ecrireTable('avis', { parent: a.id, texte: t }); f.remove(); zone.hidden = false; a.reponses++; montrer(); charger(); }, () => f.remove());
+    const f = formulaireReponse('', async t => { await ecrireTable('avis', { parent: a.id, texte: t }); f.remove(); zone.hidden = false; ouvertes.add(a.id); a.reponses++; montrer(); charger(); }, () => f.remove());
     zone.before(f); f.querySelector('textarea').focus();
   }), voir);
   carte.append(zone);
   montrer();
+  if (!zone.hidden) charger();
 }
 
 // Section « Avis » en bas de la page d'un logiciel.
@@ -185,17 +187,21 @@ function sectionAvis(logiciel) {
       if (n != null) { const barre = bloc('i'); barre.style.setProperty('--part', total ? compte / total : 0); b.append(barre); }
       b.append(bloc('span', 'doux', nombre(compte)));
       b.type = 'button'; b.setAttribute('aria-pressed', filtre === n);
-      b.onclick = () => { filtre = n; charger(); };
+      b.onclick = () => { filtre = n; pages = 1; charger(); };
       return b;
     };
     g('filtres').replaceChildren(ligne(null, "すべてのレビュー", total), ...[5, 4, 3, 2, 1, 0].map(n => ligne(n, `${n} ★`, r.find(x => x.etoiles === n)?.nombre || 0)));
   }
-  async function lire(debut = 0) {
-    const lus = await rpc('lire_avis', { du_logiciel: logiciel, avec_etoiles: filtre, debut });
-    const cartes = lus.slice(0, PAGE).map(a => carteAvis(a, charger));
-    if (lus.length > PAGE) { const suite = bouton("もっと見る", () => { suite.remove(); lire(debut + PAGE).catch(panne); }, 'fermer'); cartes.push(suite); }
-    if (!lus.length && !debut) cartes.push(bloc('p', 'doux', filtre == null ? "まだレビューはありません。" : "この評価のレビューはありません。"));
-    debut ? g('liste-avis').append(...cartes) : g('liste-avis').replaceChildren(...cartes);
+  let pages = 1;
+  async function lire() { // toutes les pages déjà affichées, remplacées d'un coup
+    const cartes = [];
+    for (let p = 0; p < pages; p++) {
+      const lus = await rpc('lire_avis', { du_logiciel: logiciel, avec_etoiles: filtre, debut: p * PAGE });
+      cartes.push(...lus.slice(0, PAGE).map(a => carteAvis(a, charger)));
+      if (lus.length <= PAGE) break;
+      if (p === pages - 1) cartes.push(bouton("もっと見る", () => { pages++; lire().catch(panne); }, 'fermer'));
+    }
+    g('liste-avis').replaceChildren(...(cartes.length ? cartes : [bloc('p', 'doux', filtre == null ? "まだレビューはありません。" : "この評価のレビューはありません。")]));
   }
   const panne = () => g('liste-avis').replaceChildren(bloc('p', 'doux', "レビューを読み込めません。"));
   async function charger() {
@@ -209,5 +215,8 @@ function sectionAvis(logiciel) {
   g('ecrire').onclick = () => ouvrirAvis(logiciel, mien, charger);
   document.addEventListener('compte', charger);
   compte.then(charger);
-  return l => { logiciel = l; filtre = null; charger(); }; // mode dev : autre logiciel
+  // Changement ailleurs : relu, sauf pendant qu'on écrit (réessayé ensuite). Le délai laisse finir l'animation des pouces.
+  const relire = regrouper(() => { g('liste-avis').querySelector('form') ? relire() : charger(); }, 1200);
+  document.addEventListener('direct', e => { if (e.detail.sujet === 'logiciel:' + logiciel && ['avis', 'tout'].includes(e.detail.quoi)) relire(); });
+  return l => { logiciel = l; filtre = null; pages = 1; charger(); }; // mode dev : autre logiciel
 }
