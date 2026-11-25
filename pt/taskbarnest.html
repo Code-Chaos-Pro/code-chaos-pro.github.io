@@ -7,10 +7,11 @@
 <meta name="description" content="Pastas de aplicações na barra de tarefas do Windows 11.">
 <link rel="canonical" href="https://codechaoslab.com/pt/taskbarnest">
 <link rel="icon" href="/images/taskbarnest.png">
-<link rel="stylesheet" href="/style.css?15">
-<script src="logiciels.js?13"></script>
-<script src="compte.js?5"></script>
-<script src="avis.js?1"></script>
+<link rel="stylesheet" href="/style.css?16">
+<script src="logiciels.js?14"></script>
+<script src="compte.js?6"></script>
+<script src="direct.js?1"></script>
+<script src="avis.js?2"></script>
 </head>
 <body>
 <header class="cadre entete">
@@ -125,6 +126,9 @@ historique();
 document.addEventListener('compte', historique);
 if (l.telechargement) { const b = document.getElementById('telecharger'); b.href = l.telechargement; b.textContent = "Transferir"; b.removeAttribute('aria-disabled'); }
 sectionAvis(l.id);
+suivre('logiciel:' + l.id, false);
+const relireCompteurs = regrouper(montrerCompteurs, 800);
+document.addEventListener('direct', e => { if (e.detail.sujet === 'logiciel:' + l.id && e.detail.quoi !== 'avis') relireCompteurs(); });
 // Démonstration : le dossier s'ouvre et se ferme comme dans la vraie barre.
 const scene = document.getElementById('scene'), dossier = document.getElementById('dossier');
 dossier.addEventListener('click', () => scene.classList.toggle('fermee'));
