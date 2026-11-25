@@ -69,14 +69,13 @@ function demander(titre, texte, libelle, action) { // confirmation
 }
 const MOTIFS = [['insulte', "Insulte ou haine"], ['publicite', "Publicité ou arnaque"], ['hors-sujet', "Hors sujet"], ['autre', "Autre"]];
 function signaler(a) {
-  if (!session) return ouvrirConnexion("Connectez-vous pour signaler un avis.");
   const { zone, pied } = fenetre("Signaler"), choix = document.createElement('select'), etat = bloc('p', 'doux');
   etat.setAttribute('role', 'status');
   for (const [v, t] of MOTIFS) choix.add(new Option(t, v));
   zone.append(bloc('label', 'champ', "Motif", choix), etat);
   const b = bouton("Envoyer", async () => {
     b.disabled = true;
-    try { await ecrireTable('signalements', { avis: a.id, motif: choix.value }); etat.textContent = "Signalement envoyé. Merci !"; }
+    try { await appel('/rest/v1/rpc/signaler', { l_avis: a.id, le_motif: choix.value }); etat.textContent = "Signalement envoyé. Merci !"; }
     catch (x) { b.disabled = false; etat.textContent = x.code === 409 ? "Vous avez déjà signalé ce texte." : "Le signalement n’est pas parti. Réessayez."; }
   });
   pied.append(b);
@@ -87,7 +86,6 @@ function pouces(a) {
     b.type = 'button'; b.innerHTML = POUCE; b.append(compte); b.title = nom; b.setAttribute('aria-label', nom);
     b.montrer = () => { compte.textContent = nombre(positif ? a.pour : a.contre); b.setAttribute('aria-pressed', a.mon_vote === positif); };
     b.onclick = async () => {
-      if (!session) return ouvrirConnexion("Connectez-vous pour voter.");
       const avant = { pour: a.pour, contre: a.contre, mon_vote: a.mon_vote };
       if (a.mon_vote === true) a.pour--;
       if (a.mon_vote === false) a.contre--;
@@ -98,9 +96,11 @@ function pouces(a) {
       b.classList.remove('anime'); void b.offsetWidth; if (a.mon_vote === positif) b.classList.add('anime'); // offsetWidth : relance l'animation
       tous.forEach(x => { x.disabled = true; });
       try {
-        if (a.mon_vote === null) await appel(`/rest/v1/pouces?avis=eq.${a.id}&compte=eq.${session.id}`, undefined, {}, 'DELETE');
-        else await ecrireTable('pouces?on_conflict=avis,compte', { avis: a.id, positif: a.mon_vote }, ',resolution=merge-duplicates');
-      } catch { Object.assign(a, avant); tous.forEach(x => x.montrer()); }
+        await appel('/rest/v1/rpc/voter', { l_avis: a.id, vote: a.mon_vote });
+      } catch (x) {
+        Object.assign(a, avant); tous.forEach(y => y.montrer());
+        if (x.message.includes('connecte')) ouvrirConnexion("Un vote a déjà été donné depuis cette connexion Internet. Connectez-vous pour voter.");
+      }
       tous.forEach(x => { x.disabled = false; });
     };
     b.montrer();
@@ -155,7 +155,7 @@ const ouvertes = new Set(); // avis dont les réponses sont affichées : gardée
 function reponses(a, carte, actions) {
   const zone = bloc('div', 'reponses'), voir = lien('', () => { zone.hidden = !zone.hidden; ouvertes[zone.hidden ? 'delete' : 'add'](a.id); montrer(); if (!zone.hidden) charger(); });
   zone.hidden = !ouvertes.has(a.id) || !a.reponses;
-  const montrer = () => { voir.hidden = !a.reponses; voir.textContent = `${zone.hidden ? "Afficher les réponses" : "Masquer les réponses"} (${nombre(a.reponses)})`; voir.setAttribute('aria-expanded', !zone.hidden); };
+  const montrer = () => { voir.parentNode.hidden = !a.reponses; voir.textContent = `${zone.hidden ? "Afficher les réponses" : "Masquer les réponses"} (${nombre(a.reponses)})`; voir.setAttribute('aria-expanded', !zone.hidden); };
   async function charger(debut = 0) {
     try {
       const lues = await rpc('lire_avis', { reponses_a: a.id, debut });
@@ -169,8 +169,8 @@ function reponses(a, carte, actions) {
     if (carte.querySelector(':scope > form')) return;
     const f = formulaireReponse('', async t => { await ecrireTable('avis', { parent: a.id, texte: t }); f.remove(); zone.hidden = false; ouvertes.add(a.id); a.reponses++; montrer(); charger(); }, () => f.remove());
     zone.before(f); f.querySelector('textarea').focus();
-  }), voir);
-  carte.append(zone);
+  }));
+  carte.append(zone, bloc('div', 'actions', voir)); // tout en bas de l'avis, sous les réponses
   montrer();
   if (!zone.hidden) charger();
 }

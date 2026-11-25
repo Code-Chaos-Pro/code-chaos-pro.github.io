@@ -1,8 +1,8 @@
 /* Console du créateur. Son propre monde : graphite et ambre (la couleur du badge « Créateur »), dense, chiffres tabulaires.
    Reprend les pièces de style.css (avis, étoiles, fenêtres) en changeant seulement leurs couleurs. */
-:root { --fond: #f3f4f7; --surface: #fff; --creux: #f7f8fa; --texte: #171a21; --doux: #5c6473; --trait: #e0e4ea; --accent: #a85a00; --sur-accent: #fff; --ambre: #d97706; --vert: #15803d; --rouge: #c62828; --ombre: 0 1px 2px #0000000d; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fond: #0b0d11; --surface: #13161c; --creux: #0f1217; --texte: #e9ecf1; --doux: #8c95a6; --trait: #242a34; --accent: #ffab40; --sur-accent: #1a1204; --ambre: #ffab40; --vert: #3ecf8e; --rouge: #ff6b6b; --ombre: none; color-scheme: dark; } }
-:root[data-theme="dark"] { --fond: #0b0d11; --surface: #13161c; --creux: #0f1217; --texte: #e9ecf1; --doux: #8c95a6; --trait: #242a34; --accent: #ffab40; --sur-accent: #1a1204; --ambre: #ffab40; --vert: #3ecf8e; --rouge: #ff6b6b; --ombre: none; color-scheme: dark; }
+:root { --fond: #f3f4f7; --surface: #fff; --creux: #f7f8fa; --texte: #171a21; --doux: #5c6473; --trait: #e0e4ea; --accent: #a85a00; --sur-accent: #fff; --ambre: #d97706; --vert: #15803d; --rouge: #c62828; --ombre: 0 1px 2px #0000000d; --vif: #a85a00; --sur-vif: #fff; --orange: #a85a00; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fond: #0b0d11; --surface: #13161c; --creux: #0f1217; --texte: #e9ecf1; --doux: #8c95a6; --trait: #242a34; --accent: #ffab40; --sur-accent: #1a1204; --ambre: #ffab40; --vert: #3ecf8e; --rouge: #ff6b6b; --ombre: none; --vif: #ffab40; --sur-vif: #1a1204; --orange: #ffab40; color-scheme: dark; } }
+:root[data-theme="dark"] { --fond: #0b0d11; --surface: #13161c; --creux: #0f1217; --texte: #e9ecf1; --doux: #8c95a6; --trait: #242a34; --accent: #ffab40; --sur-accent: #1a1204; --ambre: #ffab40; --vert: #3ecf8e; --rouge: #ff6b6b; --ombre: none; --vif: #ffab40; --sur-vif: #1a1204; --orange: #ffab40; color-scheme: dark; }
 body { font-size: .94rem; line-height: 1.5; font-variant-numeric: tabular-nums; }
 h1 { font-size: 1.45rem; letter-spacing: -.01em; } h2 { font-size: 1rem; } h3 { font-size: .95rem; }
 .console { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
@@ -113,3 +113,5 @@ input.champ-recherche.champ-recherche { width: 260px; max-width: 100%; padding: 
   .boite { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; } .boite > * + * { border-left: 0; } .boite-liste { max-height: 60vh; } .boite.lecture .boite-liste { display: none; } .boite:not(.lecture) .boite-fil, .boite:not(.lecture) .boite-details { display: none; } .boite-fil { height: 75vh; } .retour { display: inline-block; }
 }
 @media (prefers-reduced-motion: reduce) { .vif.oui::before { animation: none; } }
+main h2::before { display: none !important; }
+.bouton { border-radius: 8px; }

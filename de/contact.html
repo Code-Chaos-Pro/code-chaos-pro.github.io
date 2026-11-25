@@ -7,14 +7,14 @@
 <meta name="description" content="Wunsch einreichen oder Problem melden.">
 <link rel="canonical" href="https://codechaoslab.com/de/contact">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/code-chaos.png">
-<link rel="stylesheet" href="/style.css?16">
+<link rel="stylesheet" href="/style.css?19">
 <script src="logiciels.js?14"></script>
 <script src="compte.js?6"></script>
 <script src="direct.js?1"></script>
 </head>
 <body>
 <header class="cadre entete">
-  <a class="marque" href="./">Code &amp; Chaos</a>
+  <a class="marque" href="./">Code <span>&amp;</span> Chaos</a>
   <nav aria-label="Seiten"><a href="./">Programme</a><a href="contact">Ticket erstellen</a><a href="tickets" id="mes-tickets" hidden>Meine Tickets</a><a href="apropos">Über uns</a></nav>
   <script>outils()</script>
 </header>
@@ -37,7 +37,7 @@
   <label class="champ" for="images">Bilder (optional, 1 oder mehr) <input type="file" id="images" accept="image/*" multiple></label>
   <div class="apercus" id="apercus"></div>
   <p class="doux">Deine Nachricht dient nur dazu, dir zu antworten. <a href="/confidentialite">Datenschutz (Französisch)</a></p>
-  <div><button class="bouton" id="envoyer">Senden</button></div>
+  <div><button class="bouton" id="envoyer">Senden (STRG + Eingabe)</button></div>
 </form>
 </main>
 <div class="annonce" id="annonce" aria-hidden="true" hidden><div><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-17"/></svg><span>Nachricht gesendet</span></div></div>
@@ -98,6 +98,7 @@ $('formulaire').onsubmit = async e => {
   } finally { $('envoyer').disabled = false; }
   $('etat').scrollIntoView({ block: 'center' });
 };
+$('texte').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !$('envoyer').disabled) $('formulaire').requestSubmit(); };
 $('encore').onclick = montrer;
 $('annonce').onanimationend = e => { if (e.target === e.currentTarget) e.target.hidden = true; };
 document.addEventListener('compte', montrer);
